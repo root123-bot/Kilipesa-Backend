@@ -1,0 +1,5 @@
+
+# Django
+media/
+db.sqlite3
+pyvenv.cfg

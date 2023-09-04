@@ -1,0 +1,591 @@
+{% extends 'mkulima/base.html' %}
+{% load static %}
+{% load filters %}
+
+{% block styles %}
+<!-- i will  remove all  this props if we have white background..-->
+{% endblock styles %}
+
+{% block optionbutton %}
+
+{% endblock optionbutton %}
+
+{% block usergroup %}
+{% if usergroup == 'admin' %}
+    admin
+{% else %}
+    Argonomist
+{% endif %}
+{% endblock %}
+
+{% block items %}
+    {% if usergroup == "admin" %}
+        <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+                <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+            </div>
+        </div>
+        <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Test and Recom..</a>
+    
+        <a href={% url 'farms' %} class="nav-item nav-link text-nowrap active"><i class="fa fa-tree me-2"></i>Farms</a>
+        <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmer</a>
+        
+        {% comment %} <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href={% url 'cropsreport' %} class="dropdown-item">Crops & Production</a>
+            </div>
+        </div> {% endcomment %}
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+                <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+                <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a>
+                <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+                <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+                <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+                <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+                <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+                <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+            </div>
+        </div>
+        {% comment %} <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href="" class="dropdown-item">Edit Profile</a>
+                <a href="" class="dropdown-item">Change Password</a>
+                <a href="" class="dropdown-item">Logs & Actions</a>
+            </div>
+        </div> {% endcomment %}
+    
+    {% endif %}
+{% endblock items %}
+
+{% block content %}
+<div class="container-fluid py-4 px-4">
+    <div style="background: #fff" class="rounded py-2">
+        <div class="">
+            <div class="col-12 px-5 py-3" style="font-size: 110%">
+                <div style="display: flex; justify-content: space-between; ">
+                    <div style="display: flex; align-items: center;">
+                        <img style="border-radius: 50%; border: 2px solid grey;" src={{profile}} height="130px" width="130px" />
+                        <div class="mx-4">
+                            <div style="font-weight: bold;" class="mb-0">
+                                <span >Farmer:</span>
+                                <span class="text-uppercase">{{farmer.full_name}}</span>  
+                            </div>
+                            <div style="font-weight: bold;" class="mb-0">
+                                <span>Phone:</span>
+                                <span>{{farmer.phone}}</span>
+                            </div>
+                            <div style="font-weight: bold;" class="mb-0">
+                                <span>Residence:</span>
+                                <span>{{farmer.region}}, {{farmer.district}}</span>
+                            </div>
+                            
+                            <div style="font-weight: bold;" class="mb-0">
+                                <small>Farms Size:</small>
+                                <small id="fmsizems">{{totalsize | roundmetersquare }}</small>m<sup>2</sup> /
+                                <small> {% with sizeinhectras=totalsize|computeonlyhectras %} {{sizeinhectras}} {% endwith %} hectras</small>
+
+                            </div> 
+                        </div>
+                    </div>
+                    <div id="buttonHolder">
+                        <div style="display: flex; align-items: center">
+                            <div style="margin-right: 15px">
+                                <span style="cursor: pointer" id="printelem">
+                                <img src={% static 'mkulima/images/print.png' %} width="20" />
+                                Print</span>
+                            </div>
+                            <a style='display: inline' href={% url 'editrecord' rid=record_id %}><button class="btn btn-danger btn-md rounded-pill m-2" style="font-weight: bold">EDIT INFO</button></a>
+                        </div>
+                    </div>
+                    </div>
+                    <hr />
+                    <div style="" class="row">
+                        <div class="col-4" style="border-right: 1px solid grey; min-height: 350px">
+                            <div class="mb-3" id="drowpdownContainer">
+                                <label for="farm" style="display: none"><small>Select farm</small></label>
+                                <input type="hidden" value="{{farmId}}" id="farmIdToRender" />
+                                <select data-farm-metadata="{{farmwithid}}" name="farm" style="color: white" id="farm-select" class="ui fluid selection dropdown">
+                                    {% for farm in metadata %}
+                                        <option value="{{farm.farm.id}}">{{farm.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div id="metadata-holder">
+                                <small style="font-weight: bold;" class="text-uppercase">FARM METADATA</small>
+
+                                <div>
+                                    <div class="mb-0">
+                                        <small style="">Farm Location:</small>
+                                        <small>NJOMBE, MAKAMBAKO</small>
+                                    </div>
+
+                                    <div class="mb-0">
+                                        <small style="">Farm Size:</small>
+                                        <small>5 hectras</small>
+                                    </div>
+
+                                    <div class="mb-0">
+                                        <small style="">Is assessed:</small>
+                                            <img class="mx-2" src={% static 'administrator/images/check-mark.png' %} width="15px" />
+                                    </div>
+                                    <br />
+                                    <small style="font-weight: bold;" class="text-uppercase">Recommendations</small>
+                                    <div class="my-2" style="border: 1px solid grey">
+                                        <div class="mx-2">
+                                            <small style="font-weight: bold" class=''>Crops' Seed amount</small>
+                                            <div>
+                                                <div class="mx-2">
+                                                    <small style="display: block">Maize<small class="mx-2 text-success" style="font-weight: bold">3KG</small></small>
+                                                    <small style="display: block">Rice<small class="mx-2 text-success" style="font-weight: bold">3KG</small></small>
+                                                    <small style="display: block">Beans<small class="mx-2 text-success" style="font-weight: bold">3KG</small></small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="my-2" style="border: 1px solid grey">
+                                        <div class="mx-2">
+                                            <small style="font-weight: bold" class=''>Fertilizers' amount</small>
+                                            <div>
+                                                <div class="mx-2">
+                                                    <small style="display: block">Dodoma Booster<small class="mx-2 text-success" style="font-weight: bold">3KG</small></small>
+                                                    <small style="display: block">Maemze Phosphate<small class="mx-2 text-success" style="font-weight: bold">8KG</small></small>
+                                                    <small style="display: block">Mokusaku Booster<small class="mx-2 text-success" style="font-weight: bold">9KG</small></small>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="mb-0">
+                                        <small style="">Registered at:</small>
+                                        <small>{{default.registered_date}}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-8" style="height: 300px">
+                            <p style="font-weight: bold;" class="text-uppercase">FARM ON MAP</p>
+                            <div class="h-100" id="display-map">
+                            
+                            </div>
+                            <div class="my-2" style="display: flex; align-items: center">
+                                <img src={% static 'mkulima/images/warning.png' %} width="12px" />
+                                <small class="mx-2" style="font-weight: bold">Disclaimer: The area size calculation is not 100% accurate, its roughly 91% accurate.</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById("printelem").addEventListener("click", (e) => {
+        e.preventDefault()
+        var btnDiv = document.getElementById("buttonHolder")
+        var notiDiv = document.getElementById("notificationCont")
+        var logoutDiv = document.getElementById("logoutCont")
+        var sidebartoggle = document.getElementById("ellipisContainer")
+        var dropdown = document.getElementById("drowpdownContainer")
+        btnDiv.style.display = "none"
+        notiDiv.style.display = "none"
+        logoutDiv.style.display = "none"
+        sidebartoggle.style.display = "none"
+        dropdown.style.display = "none"
+        window.print()
+        btnDiv.style.display = "block"
+        notiDiv.style.display = "block"
+        logoutDiv.style.display = "block"
+        sidebartoggle.style.display = "flex"
+        dropdown.style.display = "block"
+        // window.location.reload()
+    })
+</script>
+
+{% comment %} this semantic script should be rendered above all scripts.....  just before bootstrap logic being executed..
+just because bootstrap .dropdown() conflict with semantic-ui .dropdown() so by using this will make our script loaded above 
+the bootstrap min.js which contains the .dropdown() function... that's why we used the aboveBootstrapToHaveSemantic block ..
+kama umefanya hivi afu bado una-receive .dropdown() error from the bootstrap.min.js just load your page in 'Private mode' which
+will clear all caches... sometime our browser cache the last rendered page.. so just clear cache... just do that and make sure the 
+semantic ui script and css at <head> is defined above the 'bootstrap' css and bootstrap links.. HII INANISUMBUAGA SANA NDO MAANA 
+LEO NIME-AMUA NI-COMMENT.... THIS WILL SOLVE ERROR of .dropdown() is not defined...  {% endcomment %}
+{% block aboveBootstrapToHaveSemantic %}
+
+    <script>
+        var domain = "http://147.182.138.184"
+        function fetchFarmDetails(id) {
+
+            return fetch(`${domain}/api/farmdetails/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{csrf_token}}'
+                },
+                body: JSON.stringify({id:id})
+            }).then(response => response.json())
+        }
+
+        function executeCoreLogics(value) {
+            var farmselect = document.getElementById('farm-select')
+            var mt = farmselect.getAttribute('data-farm-metadata')
+            var metadata = JSON.parse(mt)
+            console.log('mt ', metadata)
+            console.log('value ', farm)
+            var farm = metadata.find(farm => farm.id.toString() === value.toString())
+            var farm_id = farm.id 
+            // let's fetch from DB...
+            // first show the loading spinner in the farm metadata div...
+            // then do the same as we've done in Dashboard page of our admin...
+
+            var loaderimg = document.createElement('img')
+            loaderimg.src = "{% static 'mkulima/images/loader.gif' %}"
+            loaderimg.style.width = "25px"
+            loaderimg.className = "imgloader"
+
+
+            // our target..
+            var metadataElem = document.getElementById("metadata-holder")
+            metadataElem.innerHTML = ""
+            metadataElem.style.display = "flex"
+            metadataElem.style.justifyContent = "center"
+            metadataElem.style.alignItems = "center"
+            // then append your loaderimage in our targetDiv 
+            metadataElem.appendChild(loaderimg)
+
+            var mapElem = document.getElementById("display-map")
+            // clear the content of 'display-map' before displaying loader
+
+
+            // testing logic to clear map leaflet data for and to update later
+            mapElem.innerHTML = ""
+            mapElem.className = "h-100"
+
+
+            var mapElemLoader = document.createElement("img")
+            mapElemLoader.src = "{% static 'mkulima/images/loader.gif' %}"
+            mapElemLoader.style.width = "25px"
+            mapElemLoader.className = "maploadder"
+            
+            mapElem.innerHTML = ""
+            mapElem.style.display = "flex"
+            mapElem.style.justifyContent = "center"
+            mapElem.style.alignItems = "center"
+            // then append your loaderimage in our targetDiv 
+            mapElem.appendChild(mapElemLoader)
+
+            // lets fetch some data in our backend
+            fetchFarmDetails(parseInt(farm_id))
+                .then(farm => {
+                        setTimeout(() => {
+                            // i think also here we should clear our metadata element, its good place here to clear coz some data
+                            // needed to be added this will remove the duplicates 
+                            metadataElem.innerHTML = ""
+                            // now i need to display metadata..
+                            titleSmall = document.createElement("small")
+                            titleSmall.style.fontWeight = "bold"
+                            titleSmall.className = "text-uppercase"
+                            titleSmall.innerText = "FARM METADATA"
+
+                            detailsHolder = document.createElement("div")
+
+                            locationDiv = document.createElement("div")
+                            locationDiv.className = "mb-0"
+                            locationSmall = document.createElement("small")
+                            locationSmall.innerText = "Farm Location: "
+                            locationValue = document.createElement("small")
+                            locationValue.innerText = `${farm.farm_location}`
+                            locationDiv.appendChild(locationSmall)
+                            locationDiv.appendChild(locationValue)
+
+                            fmSizeDiv = document.createElement("div")
+                            fmSizeDiv.className = "mb-0"
+                            fmSizeTitle = document.createElement("small")
+                            fmSizeTitle.innerText = "Farm Size: "
+                            sizevalue = document.createElement("small")
+                            
+                            programmed_fm_size = 0;
+                            console.log('farm size in square meters', farm.pragrammed_farmsize)
+                            size_in_hc = farm.pragrammed_farmsize / 10000;
+                            elems = size_in_hc.toString().split('.')
+                            output = null
+                            if (elems[0].length > 3) {
+                                // we should round to 1 decimal place...
+                                // and set it to output
+                                number = +elems[0]
+                                output = `${number.toFixed(1)}`
+                            }
+                            else {
+                                // leave it alone..
+                                number = +elems[0]
+                                output = `${number}`
+                            }
+
+                            let fm_size_ha = farm.pragrammed_farmsize / 10000
+
+
+                            // this outptu is what we need to pass to sizevalue.innerText
+                            sizevalue.innerText = `${farm.pragrammed_farmsize.toFixed(1)} m`
+                            unitElem = document.createElement("sup")
+                            unitElem.innerText = "2"
+                            sizevalue.appendChild(unitElem)
+
+                            sizeHectraSmall = document.createElement("small")
+                            sizeHectraSmall.innerText = ` / ${fm_size_ha.toFixed(3)} ha`
+                            sizevalue.appendChild(sizeHectraSmall)
+
+                            fmSizeDiv.appendChild(fmSizeTitle)
+                            fmSizeDiv.appendChild(sizevalue)
+
+
+                            isAccessedDiv = document.createElement("div")
+                            isAccessedDiv.className = "mb-0"
+                            smallElem = document.createElement("small")
+                            smallElem.innerText = "Is assessed: "
+                            imageElem = document.createElement("img")
+                            imageElem.className = "mx-2"
+
+                            {/* oya mbona ina-fetch fasta sana embu tuweke hata delay of 2 seconds ili hata tuone ile 
+                                spinner yetu ya ticktok coz sio poa inavyo-fetch data inakuwa ngumu kwa user kujua kama 
+                                there is new data... ko loading spinner isipoonekana kabisa kidogo inakua jau...
+                                kama baadae utaona haina maana then tutaitoa hii delay...
+                            */}
+                            
+                            if(farm.have_report) {
+                                // then lets have image of tick
+                                imageElem.src = "{% static 'administrator/images/check-mark.png' %}"
+                                imageElem.style.width = "15px"
+                            }
+                            else {
+                                imageElem.src = "{% static 'administrator/images/cancel.png' %}"
+                                imageElem.style.width = "12px"
+                            }
+
+                            
+
+                            isAccessedDiv.appendChild(smallElem)
+                            isAccessedDiv.appendChild(imageElem)
+
+                            
+                            detailsHolder.appendChild(titleSmall)
+                            detailsHolder.appendChild(locationDiv)
+                            detailsHolder.appendChild(fmSizeDiv)
+                            detailsHolder.appendChild(isAccessedDiv)
+
+                            loaders = document.getElementsByClassName("imgloader")
+                            for (let loader of loaders) {
+                                loader.remove()
+                            }
+                            // change metadata display to 'block'
+                            metadataElem.style.display = "block"
+                            metadataElem.appendChild(detailsHolder)
+
+                            if (farm.have_report) {
+                                // tuna-report then what next is to have recommend div... 
+                                // lets break 
+                                breakElem = document.createElement('br')
+                                recommtit = document.createElement('small')
+                                recommtit.style.fontWeight = "bold"
+                                recommtit.className = 'text-uppercase'
+                                recommtit.innerText = "Recommendations"
+
+                                // create recomm holder... contains all boxes of fertilizer and seed amount..
+                                recommHolderDiv = document.createElement("div")
+                                recommHolderDiv.className = "my-2"
+                                recommHolderDiv.style.border = "1px solid grey"
+
+                                // create seed amount part...
+                                seedDiv = document.createElement("div")
+                                seedtitle = document.createElement("small")
+                                seedtitle.style.fontWeight = "bold"
+                                seedtitle.innerText = "Crops' Seed amount"
+                                // the one will contain small elements..
+                                containeDiv = document.createElement("div")
+                                containeDiv.className = "mx-2"
+                                innerContainerDiv = document.createElement("div")
+                                innerContainerDiv.className = "mx-2"
+                                containeDiv.appendChild(seedtitle)
+                                for (var data of farm.get_seed_amount) {
+                                    var cropname = Object.keys(data)[0]
+                                    var seedamount = Object.values(data)[0]
+                                    
+                                    outerSmall = document.createElement("small")
+
+                                    outerSmall.style.display = "block"
+                                    
+                                    outerSmall.innerText = cropname 
+
+                                    seedvaluesmall = document.createElement("small")
+                                    seedvaluesmall.className = "mx-2 text-success"
+                                    seedvaluesmall.style.display = ""
+                                    seedvaluesmall.style.fontWeight = "bold"
+                                    seedvaluesmall.innerText = `${seedamount}`   // i omited the 'KG'
+                                    outerSmall.appendChild(seedvaluesmall)
+                                    innerContainerDiv.appendChild(outerSmall)
+                                    // innerContainerDiv.appendChild(seedvaluesmall)
+                                }
+                                containeDiv.appendChild(innerContainerDiv)
+                                seedDiv.appendChild(containeDiv)
+                                recommHolderDiv.appendChild(seedDiv)
+
+                                metadataElem.appendChild(breakElem)
+                                metadataElem.appendChild(recommtit)
+                                metadataElem.appendChild(recommHolderDiv)
+
+
+                                // have the metadata of fertlizer amount...
+                                // append all of them in metadata div and end Loading...
+                                recommFertilizerDiv = document.createElement("div")
+                                recommFertilizerDiv.className = "my-2"
+                                recommFertilizerDiv.style.border = "1px solid grey"
+
+
+                                fertlizerDiv = document.createElement("div")
+                                boxTitle = document.createElement("small")
+                                boxTitle.style.fontWeight = "bold"
+                                boxTitle.innerText = "Fertilizers' amount"
+
+                                fertContainerDiv = document.createElement("div")
+                                fertContainerDiv.className = "mx-2"
+                                fertinnercontainerDiv = document.createElement("div")
+                                fertinnercontainerDiv.className = "mx-2"
+                                fertContainerDiv.appendChild(boxTitle)
+
+                                for (var fertilizer of farm.get_fertilizer_amount) {
+                                    var fertilizername = Object.keys(fertilizer)[0]
+                                    var fertilizeramount = Object.values(fertilizer)[0]
+
+                                    fertilizeroutersmall = document.createElement("small")
+
+                                    fertilizeroutersmall.style.display = "block"
+                                    
+                                    fertilizeroutersmall.innerText = fertilizername
+
+                                    fertilizervaluessmall = document.createElement("small")
+                                    fertilizervaluessmall.className = "mx-2 text-success"
+                                    fertilizervaluessmall.style.display = ""
+                                    fertilizervaluessmall.style.fontWeight = "bold"
+                                    fertilizervaluessmall.innerText = `${fertilizeramount}KG`
+
+                                    fertilizeroutersmall.appendChild(fertilizervaluessmall)
+                                    fertinnercontainerDiv.appendChild(fertilizeroutersmall)
+
+                                }
+
+                                fertContainerDiv.appendChild(fertinnercontainerDiv)
+                                fertlizerDiv.appendChild(fertContainerDiv)
+                                recommFertilizerDiv.appendChild(fertlizerDiv)
+
+                                metadataElem.appendChild(recommFertilizerDiv)
+                            }
+
+                            // Registered amount...
+                            dateDiv = document.createElement("div")
+                            titleSmall = document.createElement("small")
+                            
+                            titleSmall.innerText = "Registered at: "
+                            datevalueSmall = document.createElement("small")
+                            datevalueSmall.innerText = farm.registered_date
+
+                            dateDiv.appendChild(titleSmall)
+                            dateDiv.appendChild(datevalueSmall)
+                            metadataElem.appendChild(dateDiv)
+
+
+
+                            // execute the logics to add map in our div of map...
+                            maploader = document.getElementsByClassName("maploadder")
+                            for (let loader of maploader) {
+                                loader.remove()
+                            }
+                            // put logic to display map...
+                            var mapContainer = document.getElementById("display-map")
+                            mapContainer.style.height = "100%"
+                            coords = [...farm.farm_coordinates]
+                            coordinates = []
+                            for (let coordinate of coords) {
+                                strarr = coordinate.split(', ')
+                                intarr = strarr.map(value => +value)
+                                coordinates.push(intarr)
+                            }
+                            console.log('coordinates ', coordinates)
+                        
+                            // https://stackoverflow.com/questions/19186428/refresh-leaflet-map-map-container-is-already-initialized
+                            // if you change everytime you want your leaflet map to reload maybe on change, you will get leaflet map
+                            // is already initialized error to avoid this you should have this if statment .. https://github.com/Leaflet/Leaflet/issues/3962
+                            if (mapContainer != null) {
+                                mapContainer._leaflet_id = null;
+                            }
+                            map = L.map("display-map", {
+                                measureControl: true,
+                            })
+
+                            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                maxZoom: 19,
+                                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                            }).addTo(map);
+                            var polyline = L.polyline(coordinates, {color: 'red', weight: 1, fill: true, fillColor: 'red'}).addTo(map)
+                            .bindPopup(`${farm.pragrammed_farmsize.toFixed(1)} m<sup>2</sup> / ${fm_size_ha.toFixed(3)} ha`)
+                            .openPopup();
+                            // https://gis.stackexchange.com/questions/31951/showing-popup-on-mouse-over-not-on-click-using-leaflet
+                            // https://leafletjs.com/index.html#tooltip
+
+                            // hii link ndo imenisaidia kupata kitu kizuri.. https://stackoverflow.com/questions/41522376/leaflet-open-popup-at-cursor-position-instead-of-linestring-center
+                            // test.. you can remove it if you want
+                            polyline.on('mouseover', function (e) {
+                                var popup = e.target.getPopup();
+                                popup.setLatLng(e.latlng).openOn(map);
+                            });
+                            polyline.on('mouseout', function (e) {
+                                e.target.closePopup();
+                            });
+                            polyline.on('mousemove', function (e) {
+                                e.target.closePopup();
+                                var popup = e.target.getPopup();
+                                popup.setLatLng(e.latlng).openOn(map);
+                            });
+
+                            // that guy to print map
+                            L.control.browserPrint().addTo(map)
+                            // end of that guy to print map
+
+                            // test.. you can remove it if you want..
+                            map.fitBounds(polyline.getBounds());
+                            
+                        }, 2000) 
+                    }
+                )
+            
+          
+        }
+
+        $('#farm-select').dropdown({
+            onChange: value => {
+                executeCoreLogics(value)
+            }
+
+        })
+
+        {% comment %} value = $('#farm-select').dropdown('get value') {% endcomment %}
+        fmId = document.getElementById("farmIdToRender").value
+        executeCoreLogics(+fmId)
+
+    </script>
+        
+{% endblock aboveBootstrapToHaveSemantic %}
+{% endblock content %}
+
+{% comment %} fertilizervaluessmall 448 {% endcomment %}

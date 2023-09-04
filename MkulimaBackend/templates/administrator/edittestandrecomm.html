@@ -1,0 +1,325 @@
+{% extends 'mkulima/base.html' %}
+
+{% load static %}
+
+{% block extrasemanticuicdns %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.css" integrity="sha512-tdyzfjYDk2OR9L10jvzzuGUB0Rvl5fyMW/Z8yfbYyyENfuXxtcDtEq7d/PdiA0hzQzXjWwvZasjEp8Joli2tkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/dropdown.min.js" integrity="sha512-PD2QRjH0s7TFz8Oicpi4UFJBdKP0vFeYpmNPsEoNDHfG3QcGLTs8XUrkXWEQXX2Q0g+1oEwvow27TM2VfPdTxw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/transition.min.css" integrity="sha512-HgM+2tpAdAIDm77Pe0gKU78lxA5MPfurAZFf1KDm1l/0npc9YRh+7rqDXmBKajNu3oFtiOKX+fBrK0W/8wRecw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/components/transition.min.js" integrity="sha512-TLqXvtXVij90GI++rNVSth9ilrDuyVc07ENJ6M7517r3DEaXjH/nS1klFegVw5Q0l+ZklRTFOhvAOn8avOVwYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock extrasemanticuicdns %}
+
+{% block styles %}
+<style>
+    .ui.dropdown.selection {
+        background: black;
+        caret-color: white;
+    }
+
+    i.dropdown {
+        color: white
+    }
+
+    input, select, textarea {
+        color: white;
+    }
+    
+</style>
+{% endblock styles %}
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href="" class="dropdown-item">Gatherman</a>
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap active"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms & Production</a>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">Farms & Production</a>
+            
+        </div>
+    </div>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item">Edit Profile</a>
+            <a href="" class="dropdown-item">Change Password</a>
+            <a href="" class="dropdown-item">Logs & Actions</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content %}
+<!-- Recent Sales Start -->
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-secondary text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-1">
+            <h6 class="mb-0 text-uppercase fst-italici">EDIT RECOMMENDATIONS</h6>
+            <div>
+                <a href={% url 'edittestresults' rid=report.id %}>
+                    <button class="btn btn-warning text-secondary">Edit test results</button>
+                </a>
+            </div>
+        </div>
+        <div class="text-start">Farm (Soil sample): #{{infoid}}</div>
+        <small class="text-start fst-italici d-block">** Recommendation should be added according to the test result you've submitted, the test result are displayed below.</small>
+        <div id="frontEndMsg" class="text-start" style="font-weight: bold; color: #eb1616; margin-top: 10px; display: none;">
+            <p id='frontEndMessage'>Hello world</p>
+        </div>
+    </div>
+</div>
+{% comment %} start the other required field {% endcomment %}
+<form onkeydown="return event.key != 'Enter';" id="recommendForm" method="POST">
+    {% csrf_token %}
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <div class="row">
+                        <input type="hidden" name="crop" class="form-control" id="crop"
+                          value="[]" aria-describedby="emailHelp">
+                        
+
+                        <div class="col-12 col-md-12  col-sm-12 col-lg-12 col-xl-12">
+                            <label for="culttype" id="culttypelabel" class="form-label">Cultivation type</label>
+
+                            <select id="culttype" name="culttype" class="form-select mb-3" aria-label="Default select example">
+                                <option selected>Open this select menu</option>
+
+                                <option value="Normal">Normal</option>
+                                <option value="Irrigation">Irrigation</option>
+                            </select>
+                        </div>
+                        
+                        <input value="[]" type="hidden" name="fertilizer" class="form-control" id="fertilizer"
+                          aria-describedby="emailHelp">
+                        <div class="mt-3">
+                            <label class="form-label">Fertilizers</label>
+                            <select name="mbolea" id="fertilizer-select" multiple="" class="ui multiple fluid red search selection dropdown">
+                            </select>
+                        </div>
+                        <!-- dropdown fertilizer amount-->
+                        <div class="mt-3">
+                            <div id="fertborderdiv" style="border-radius: 0px 0px; border: 2px dotted #6c7293">
+                                <div class="m-2">
+                                    <label for="customweight" class="mx-3 text-white form-label fst-italici" style="font-weight: bold">
+                                        TOTAL FERTILIZER WEIGHT (in Kg)
+                                        <small style="display: inline-block; color: #6c7293; font-weight: normal;">**Add the amount of individual fertilizer you recommend per farm size of {{farmsize}} hectras</small>
+                                        <small id="fertamounterror" style="display: none; color: #eb1616; font-weight: normal;"></small>
+                                    </label>
+                                    <br />
+                                    <div style="display: flex; align-items: center;">
+                                        <div class="">
+                                            <div id="fertilizeramount" class="ui inline dropdown mx-3">
+                                                <div class="text" id="defaultLabelfertilizer">
+                                                    Select one
+                                                </div>
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu" id="menuFertilizerAmount">
+                                                </div> 
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <input type="text" name="uzito" class="form-control" id="uzito"
+                                            aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="mx-3">
+                                            <span id="addamountfert" style="cursor: pointer;" class="text-success">
+                                                <i class="fa fa-plus"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <hr class="mx-3" />
+                                    <div class="mx-3" id="previewfertivalue">
+                                         
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- dropdown end-->
+
+
+                        <!-- this is where we'll add our array containing the values of fertilizer-name and its value in JSON-->
+                        <input type="hidden" name="fweight" class="form-control" id="fweight"
+                            aria-describedby="emailHelp">
+     
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <div class="row">
+                        <div class="">
+                            <label class="form-label">Crops</label>
+                              <select name="mazao" id="crops-select" multiple="" class="ui multiple fluid red search selection dropdown">
+                              </select>
+                          </div>
+                        
+                        <div class="mt-3">
+                            <div style="border-radius: 0px 0px; border: 2px dotted #6c7293">
+                                <div class="m-2">
+                                    <label for="" class="mx-3 text-white form-label fst-italici" style="font-weight: bold">
+                                        TOTAL SEED AMOUNT (in {{farmsize}} hectras)
+                                        <small style="display: inline-block; color: #6c7293; font-weight: normal;">**Add the total amount of seed per crop you recommend to be used in farm of {{farmsize}} hectras</small>
+                                        <small id="seedamounterror" style="display: none; color: #eb1616; font-weight: normal;"></small>
+                                    </label>
+                                    <br />
+                                    <div style="display: flex; align-items: center;">
+                                        <div class="">
+                                            <div id="seedamount" class="ui inline dropdown mx-3">
+                                                <div class="text" id="defaultLabelseed">
+                                                    Select one
+                                                </div>
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu" id="menuSeedAmount">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <input type="text" name="idadiyambegu" class="form-control" id="idadiyambegu"
+                                            aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="mx-3">
+                                            <span id="addamountseed" style="cursor: pointer;" class="text-success">
+                                                <i class="fa fa-plus"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <hr class="mx-3" />
+                                    <div class="mx-3" id="previewseedvalue">
+                                       
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- dropdown seed amount-->
+                        <input type="hidden" name="seed" class="form-control" id="seed"
+                        aria-describedby="emailHelp">
+
+                        <!-- dropdown yield amount-->
+                        <div class="mt-3">
+                            <div style="border-radius: 0px 0px; border: 2px dotted #6c7293">
+                                <div class="m-2">
+                                    <label for="" class="mx-3 text-white form-label fst-italici" style="font-weight: bold">
+                                        ESTIMATED YIELD (per 120kg)
+                                        <small style="display: inline-block; color: #6c7293; font-weight: normal;">**Add the estimated output of given crop you recommend for full farm's size of {{farmsize}} hectras. <small class="text-uppercase text-success">Remember 1 = 120kg</small></small>
+                                        <small id="yieldamounterr" style="display: none; color: #eb1616; font-weight: normal;"></small>
+                                    </label>
+                                    <br />
+                                    <div style="display: flex; align-items: center;">
+                                        <div class="">
+                                            <div id="totalyield" class="ui inline dropdown mx-3">
+                                                <div class="text" id="defaultLabelyield">
+                                                    Select one
+                                                </div>
+                                                <i class="dropdown icon"></i>
+                                                <div class="menu" id="menuYieldAmount">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <input type="text" name="estimatedoutput" class="form-control" id="estimatedoutput"
+                                            aria-describedby="emailHelp">
+                                        </div>
+                                        <div class="mx-3">
+                                            <span id="addyield" style="cursor: pointer;" class="text-success">
+                                                <i class="fa fa-plus"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <hr class="mx-3" />
+                                    <div class="mx-3" id="previewoutput">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- dropdown yield amount-->
+                        
+                        <input type="hidden" name="output" class="form-control" id="output"
+                            aria-describedby="emailHelp">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+{% comment %} end of block {% endcomment %}
+
+<!-- Recent Sales End -->
+
+<div class="container-fluid pt-4 px-4" style="margin-bottom: 20px">
+
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4 fst-italici text-uppercase">Physical Test Results</h6>
+                <div class="">
+                    <div style="font-weight: bold;" class="p-2">Soil color: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_color}}</span></div>
+                    <div style="font-weight: bold;" class="p-2">Soil temperature: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_temperature}}<sup>0</sup>C</span></div>
+                    <div style="font-weight: bold;" class="p-2">Soil structure: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_structure}}</span></div>
+                    <div style="font-weight: bold;" class="p-2">Soil texture: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_texture}}</span></div>
+                    <div style="font-weight: bold;" class="p-2">Soil form: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_form}}</span></div>
+                    <div style="font-weight: bold;" class="p-2">Soil porosity: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_porosity}}kg/m<sup>3</sup></span></div>
+                    <div style="font-weight: bold;" class="p-2">Bulk density: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.bulk_density}}kg/m<sup>3</sup></span></div>
+                    <div style="font-weight: bold;" class="p-2">Soil moisture: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_moisture}}ppm</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+                <h6 class="mb-4 fst-italici text-uppercase">Chemical Test Results</h6>
+                <div class="row">
+                    <div style="font-weight: bold;" class="p-2">Soil pH: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_ph}}</span></div>
+                    <div style="font-weight: bold;" class="p-2">Phosphorus level: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.phosphorus_level}}ppm</span></div>
+                    <div style="font-weight: bold;" class="p-2">Potassium level: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.potassium_level}}ppm</span></div>
+                    <div style="font-weight: bold;" class="p-2">Nitrogen level: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.nitrogen_level}}ppm</span></div>
+                    <div style="font-weight: bold;" class="p-2">Organic matter: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.organic_matter}}ppm</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block backtotop %}
+<a href="#" class="btn btn-lg btn-success btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+{% endblock backtotop %}
+
+{% endblock content %}
+
+
+{% block aboveBootstrapToHaveSemantic %}
+    <script src="{% static 'administrator/js/recommend/loadmanurecrops.js' %}"></script>
+    <script src="{% static 'administrator/js/recommend/previewlogics.js' %}"></script>
+    <script src="{% static 'administrator/js/recommend/dropdownferticrops.js' %}"></script>
+    <script src="{% static 'adminstrator/js/recommend/submit.js' %}"></script>
+{% endblock aboveBootstrapToHaveSemantic %}

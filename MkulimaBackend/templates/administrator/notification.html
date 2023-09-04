@@ -1,0 +1,135 @@
+{% extends 'mkulima/base.html' %} 
+{% load static %} 
+{% load humanize %}
+{% load filters %} 
+
+{% comment %} diosod {% endcomment %}
+{% block usergroup %}
+ admin 
+{% endblock %}
+
+
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+    
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fa fa-users me-2"></i>
+            Users
+        </a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+            
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Test and Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms</a>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a>
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+            <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+        </div>
+    </div>
+
+{% endblock items %}
+
+{% block content %}
+<div class="container-fluid py-4 px-4">
+    <div style="background-color: #fff" class="rounded p-4">
+        <div class="mb-4">
+            <h6 style="color: #6c7293;" class="mb-0 text-uppercase fst-italici">NOTIFICATION CENTER</h6>
+        </div>
+        <hr style="margin-bottom: 0; padding-bottom: 0" />
+        
+        <div style="background-color: #f3f3f3;"> 
+            {% if idadi > 0 %}
+            {% for notification in notifications %}
+                {% if notification.isViewed %}
+                
+                <div style="cursor: pointer;" class="pt-2 alertnoti" data_notification="{{notification.id}}" onmouseover="this.style.background='#ccc'" onmouseout="this.style.background='#f3f3f3'">
+                    <div data_notification="{{notification.id}}" class="mx-3 d-flex" style="width: 100%; justify-content: space-between; align-items: start">
+                        <div data_notification="{{notification.id}}" class="text-muted d-flex align-items-center">
+                            <i data_notification="{{notification.id}}" class="fa fa-3x fa-user-plus me-2"></i>
+                            <div data_notification="{{notification.id}}" class="mx-3">
+                                <span data_notification="{{notification.id}}" class="d-block" style="font-weight: bold;">{{notification.subject}}</span>
+                                <small data_notification="{{notification.id}}">{{notification.body | formatphrase}}</small>
+                            </div>
+                        </div>
+                        <div class="mx-5" style="display: flex; flex-direction: column; align-items: end">
+                            <span class="d-block" style="font-weight: bold;">{{notification.added_at | naturaltime}}</span>
+                            <a href={% url 'deletenotification' nid=notification.id %}><small style="text-decoration: underline;">Delete</small></a>
+                        </div>
+                    </div>
+                    <hr style="margin-top: 0; margin-bottom:0; padding-top: 0; padding-bottom: 0" class="mt-2" />
+                </div>
+
+                {% else %}
+                <div style="cursor: pointer;" class="pt-2 alertnoti" data_notification="{{notification.id}}" onmouseover="this.style.background='#ccc'" onmouseout="this.style.background='#f3f3f3'">
+                    <div data_notification="{{notification.id}}" class="mx-3 d-flex" style="width: 100%; justify-content: space-between; align-items: start">
+                        <div data_notification="{{notification.id}}" class="text-success d-flex align-items-center">
+                            <i data_notification="{{notification.id}}" class="fa fa-3x fa-user-plus me-2"></i>
+                            <div data_notification="{{notification.id}}" class="mx-3">
+                                <span data_notification="{{notification.id}}"class="d-block" style="font-weight: bold;">{{notification.subject}}</span>
+                                <small data_notification="{{notification.id}}">{{notification.body | formatphrase}}</small>
+                            </div>
+                        </div>
+                        <div class="mx-5">
+                            <span class="d-block" style="font-weight: bold; text-align: right">{{notification.added_at | naturaltime}}</span>
+                            <a href={% url 'markasread' nid=notification.id %} class="text-muted"><small style="text-decoration: underline;" class="mx-2">Mark as read</small></a>
+                            <a href={% url 'deletenotification' nid=notification.id %}><small style="text-decoration: underline;">Delete</small></a>
+                        </div>
+                    </div>
+                    <hr style="margin-top: 0; margin-bottom:0; padding-top: 0; padding-bottom: 0" class="mt-2" />
+                </div>
+                {% endif %}
+
+                
+            {% endfor %}
+
+            {% else %}
+                <p style="text-align: center;" class="p-5">No notifications</p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block myscript %}
+    <script>
+        document.addEventListener("DOMContentLoaded", (e) => {
+
+            let noti_divs = document.getElementsByClassName("alertnoti")
+            console.log('noti divs ', noti_divs)
+            for (let noti of noti_divs) {
+                noti.addEventListener("click", e => {
+                    e.stopPropagation()
+                    let noti_id = e.target.getAttribute("data_notification")
+                    console.log('this is notification id ', noti_id)
+
+                    window.location.replace(`/administrator/viewnoti/${+noti_id}`)
+                })
+            }
+        })
+    </script>
+{% endblock myscript %}

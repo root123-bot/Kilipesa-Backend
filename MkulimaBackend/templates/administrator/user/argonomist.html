@@ -1,0 +1,163 @@
+
+{% extends 'mkulima/base.html' %}
+{% load static %}
+{% load filters %}
+{% block searchform %}
+{% comment %} <form method="POST" action="{% url 'search' %}" class="d-none d-md-flex ms-4">
+    <input name="search" class="form-control bg-dark border-0" type="search" placeholder="name/location">
+</form>  {% endcomment %}
+{% endblock searchform %}
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href='' class="dropdown-item active">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+            
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms</a>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Crops</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+        </div>
+    </div>
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item">Edit Profile</a>
+            <a href="" class="dropdown-item">Change Password</a>
+            <a href="" class="dropdown-item">Logs & Actions</a>
+        </div>
+    </div> {% endcomment %}
+{% endblock items %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    {% comment %} <div class="d-flex justify-content-end" style="font-weight: bold">
+        <a href={% url 'userargonomist' %} style="cursor: pointer;" {% if month == 'all' %} class="text-success" {% else %} class="text-muted" {% endif %}>All</a>
+        <a href="{% url 'filterbymonth' %}?month=1" style="cursor: pointer;" {% if month == '1' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Jan</a>
+        <a href="{% url 'filterbymonth' %}?month=2" style="cursor: pointer;" {% if month == '2' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Feb</a>
+        <a href="{% url 'filterbymonth' %}?month=3" style="cursor: pointer;" {% if month == '3' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Mar</a>
+        <a href="{% url 'filterbymonth' %}?month=4" style="cursor: pointer;" {% if month == '4' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Apr</a>
+        <a href="{% url 'filterbymonth' %}?month=5" style="cursor: pointer;" {% if month == '5' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>May</a>
+        <a href="{% url 'filterbymonth' %}?month=6" style="cursor: pointer;" {% if month == '6' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Jun</a>
+        <a href="{% url 'filterbymonth' %}?month=7" style="cursor: pointer;" {% if month == '7' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Jul</a>
+        <a href="{% url 'filterbymonth' %}?month=8" style="cursor: pointer;" {% if month == '8' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Ago</a>
+        <a href="{% url 'filterbymonth' %}?month=9" style="cursor: pointer;" {% if month == '9' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Sep</a>
+        <a href="{% url 'filterbymonth' %}?month=10" style="cursor: pointer;" {% if month == '10' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Oct</a>
+        <a href="{% url 'filterbymonth' %}?month=11" style="cursor: pointer;" {% if month == '11' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Nov</a>
+        <a href="{% url 'filterbymonth' %}?month=12" style="cursor: pointer;" {% if month == '12' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Dec</a>
+    </div> {% endcomment %}
+    {% comment %} <hr /> {% endcomment %}
+    {% comment %} <div class="row"> {% endcomment %}
+    <div class="" style="margin-bottom: 15px">
+        <div style="background: #fff;" class="rounded h-100 p-4">
+            <div class="d-flex" style="justify-content: space-between">
+                <h6 style="color: #6c7293;" class="mb-4 fst-italici" style="font-weight: bold"> {% if year %}ARGONOMISTS ({{year}}) {% else %} ARGONOMISTS {% endif %}</h6>
+                <form method="POST" id="deleteargonomists">
+                    {% csrf_token %}
+                    <input type="hidden" name="profileids" id="idsinput" />
+                    <a href="" style="display: none;" id="submitlink" class="text-success fst-italici">Delete selected</a>
+                </form>
+            </div>
+            {% if idadi > 0 %}
+            <div id="tableView_wrapper">
+                <div class="row px-12" >
+                    <div class="col-sm-12">
+                        <table class="responsive table" id="tableView">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Name</th>
+                                    <th scope="col" class="text-center">Location</th>
+                                    <th scope="col" class="text-center">Status</th>
+                                    <th scope="col" class="text-center">Phone</th>
+                                    {% comment %} <th scope="col" class="text-center"></th> {% endcomment %}
+                                    <th scope="col" class="text-center"># Task done</th>
+                                    <th scope="col" class="text-center">Registered at</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for argonomist in argonomists %}
+                                <tr>
+                                    <td class='text-uppercase text-success' style="font-weight: bold; display:flex; align-items: center"> 
+                                        <input style="display: none" class="form-check-input" type="checkbox">
+                                        <span title="" title="{{argonomist.user.id}}" style="cursor: pointer;" class=""><a href={% url 'viewargoprofile' aid=argonomist.id  %} class="text-success" href=""> {{argonomist.first_name}} {{argonomist.last_name}}</a></span>
+                                    </td>
+                                    <td class="text-center text-uppercase">{{argonomist.region}}, {{argonomist.district}}</td>
+                                    <td class="text-center">{% if argonomist.user.is_active %} <span class="text-success">Active</span> {% else %} <span class="text-danger">Inactive</span> {% endif %} </td>
+                                    {% comment %} <td class="text-center">{% if argonomist.user.is_active %} True {% else %} False {% endif %} </td> {% endcomment %}
+                                    <td class="text-center">{{argonomist.phone}}</td>
+                                    <td class="text-center">{{argonomist.argoreport.all.count}}</td> <!-- but we get report both which is completed and not completed, for now i thinks its okay, ko hapa ita-fetch all reports na exception ya hapa ni kwamba report inakua tested full but it can have no recommendations....-->
+                                    <td class="text-center">{{argonomist.user.joined | formatdatetime}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+            
+            
+            {% else %}
+                <p>No argonomist found here</p>
+            {% endif %}
+        </div>
+    </div>
+        {% comment %} <div class="col-3" style="margin-bottom: 20px">
+            <div class="bg-secondary rounded p-4">
+                <h6 class="mb-4 fst-italici" style="font-weight: bold">FILTER</h6>
+                <div>
+                    <div>
+                        <p style="margin-bottom: 0; padding-bottom: 0; font-weight: bold">By Active</p>
+                        <a style="display: block;" href="{% url 'status' %}?status=all" {% if status == "all" %} class="text-success" {% else %} class="text-muted" {% endif %}>All</a>
+                        <a style="display: block;" href="{% url 'status' %}?status=alive" {% if status == "alive" %} class="text-success" {% else %} class="text-muted" {% endif %}>Yes</a>
+                        <a style="display: block;" href="{% url 'status' %}?status=inactive" {% if status == "inactive" %} class="text-success" {% else %} class="text-muted" {% endif %}>No</a>
+                    </div>
+                    <div class="my-3">
+                        <form method='GET' id="yearform" action="{% url 'filterbyyear' %}">
+                            {% csrf_token %}
+                            <label for="yearFilter" style="font-weight: bold">By Year</label>
+                                <input type="number" name="year" class="form-control" style="margin-top: 3px" id="yearFilter"
+                                aria-describedby="">                        
+                            <small id="yearfilterlink" class="fst-italici text-success" style="display: block; margin-left: 80%; font-weight: bold; cursor: pointer;">apply</small>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    {% comment %} </div> {% endcomment %}
+</div>
+
+{% comment %} <script src={% static 'administrator/js/delete_argonomists.js' %}></script> {% endcomment %}
+{% endblock content %}
+

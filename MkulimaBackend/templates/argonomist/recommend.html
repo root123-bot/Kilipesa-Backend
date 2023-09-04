@@ -1,0 +1,3247 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="utf-8">
+    <title>KiliPesa</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- jquery should be top -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+     <!-- semantic ui css -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+        integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+        integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+
+    <link href={% static "mkulima/js/darkpan/lib/owlcarousel/assets/owl.carousel.min.css" %} rel="stylesheet" />
+    <link
+      href={% static "mkulima/js/darkpan/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" %}
+      rel="stylesheet"
+    />
+
+
+    
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href={% static "mkulima/css/darkpan/bootstrap.min.css" %}
+    rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href={% static "mkulima/css/darkpan/style.css" %} rel="stylesheet" />
+
+    <!-- caret-color change the color of blinking cursor-->
+    {% comment %} style="background: #95D5B2; border: 1px solid #6c7293" {% endcomment %}
+    <style>
+        .ui.dropdown.selection {
+            background: #95D5B2;
+            caret-color: white;
+            border: 1px solid #6c7293;
+        }
+
+        i.dropdown {
+            color: white
+        }
+
+        input, select, textarea {
+            color: white;
+        }
+        
+    </style>
+</head>
+
+
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav style="background: #fff" class="navbar">
+                <a href="/" class="navbar-brand mx-4 mb-3" ><img src={% static 'mkulima/images/logo.jpeg' %} width="100" /></a>
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <div class="position-relative">
+                        <img class="rounded-circle" src={{photo}} alt="" style="width: 40px; height: 40px;">
+                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                    </div>
+                    <div class="ms-3">
+                        <h6 style="color: #6c7293;" class="mb-0 text-capitalize">{{fname}} {{lname}}</h6>
+                        <span>{{usergroup}}</span>
+                    </div>
+                </div>
+                    <div class="navbar-nav w-100">
+                        {% if usergroup == "admin" %}
+                            <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+                                <div class="dropdown-menu bg-transparent border-0">
+                                    <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+                                    <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+                                </div>
+                            </div>
+                            <a href="" class="nav-item nav-link text-nowrap active"><i class="fa fa-vial me-2"></i>Test and Recom..</a>
+                            <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+                            <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+                        
+                            {% comment %} <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+                                <div class="dropdown-menu bg-transparent border-0">
+                                    <a href={% url 'farms' %} class="dropdown-item">Farms</a>
+                                </div>
+                            </div>
+                         {% endcomment %}
+                            {% comment %} <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+                                <div class="dropdown-menu bg-transparent border-0">
+                                    <a href={% url 'cropsreport' %} class="dropdown-item">Crops & Production</a>
+                                </div>
+                            </div> {% endcomment %}
+                            <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+                                <div class="dropdown-menu bg-transparent border-0">
+                                    <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+                                    <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+                                    {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+                                    <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+                                    <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+                                    <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+                                    <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+                                    <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+                                    <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+                                </div>
+                            </div>
+                            {% comment %} <div class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+                                <div class="dropdown-menu bg-transparent border-0">
+                                    <a href="" class="dropdown-item">Edit Profile</a>
+                                    <a href="" class="dropdown-item">Change Password</a>
+                                    <a href="" class="dropdown-item">Logs & Actions</a>
+                                </div>
+                            </div> {% endcomment %}
+                        {% else %}
+                            <a href={%url 'argo_full_profile' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                            <a href="" class="text-nowrap nav-item nav-link active"><i class="fa fa-comments me-2"></i>Test & Recomme.</a>
+                            <a href={% url 'argontasks' %} class="text-nowrap nav-item nav-link"><i class="fa fa-th me-2"></i>My Task</a>
+                            <a href={% url 'viewargoprofile' aid=argonomist %} class="nav-item nav-link"><i class="fa fa-edit me-2"></i>Edit Profile</a>
+                            <a href={% url 'forgotPassword' %} class="nav-item nav-link text-nowrap"><i class="fa fa-lock me-2"></i>Change Password</a>
+                        {% endif %}
+                    </div>   
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+        
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav style="background: #fff" class="navbar navbar-expand sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars text-success"></i>
+                </a>
+               
+                <div class="navbar-nav align-items-center ms-auto">
+                    <div class="nav-item dropdown">
+                        
+                    </div>
+                    <div class="nav-item dropdown">
+                        <div>
+                            <button type="submit" id="completebtn"  class="btn btn-success">Save Recommendation</button>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src={{photo}} alt="" style="width: 40px; height: 40px;">
+                            <span style="color: #6c7293; font-weight: bold;" class="d-none d-lg-inline-flex text-capitalize" onmouseover="this.style.color='#49A078'" onmouseout="this.style.color='#6c7293'">{{fname}} {{lname}}</span>
+                        </a>
+                        <div style="background: #fff" class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0">
+                            <a href={% url 'logout' %} class="dropdown-item">Logout</a>
+                            
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+
+            <!-- Recent Sales Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div style="background: #fff" class="text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-1">
+                        <h6 style="color: #6c7293;" class="mb-0 text-uppercase fst-italici">Add Recommendation</h6>
+                        <div>
+                            <a href={% url 'edittestresults' rid=report.id %}>
+                                <button class="btn btn-warning text-secondary">Edit test results</button>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="text-start">Farm (Soil sample): #{{infoid}}</div>
+                    <small class="text-start fst-italici d-block">** Recommendation should be added according to the test result you've submitted, the test result are displayed below.</small>
+                    <div id="frontEndMsg" class="text-start" style="font-weight: bold; color: #eb1616; margin-top: 10px; display: none;">
+                        <p id='frontEndMessage'>Hello world</p>
+                    </div>
+                </div>
+            </div>
+            {% comment %} start the other required field {% endcomment %}
+            <form onkeydown="return event.key != 'Enter';" id="recommendForm" method="POST">
+                {% csrf_token %}
+                <div class="container-fluid pt-4 px-4">
+                    <div class="row g-4">
+                        <div class="col-sm-12 col-xl-6">
+                            <div style="background: #fff" class="rounded h-100 p-4">
+                                <div class="row">
+                                    <input type="hidden" name="crop" class="form-control" id="crop"
+                                      value="[]" aria-describedby="emailHelp">
+                                    
+
+                                    <div class="col-12 col-md-12  col-sm-12 col-lg-12 col-xl-12">
+                                        <label for="culttype" id="culttypelabel" class="form-label">Cultivation type</label>
+
+                                        <select style="background: #95D5B2; border: 1px solid #6c7293" id="culttype" name="culttype" class="form-select mb-3" aria-label="Default select example">
+                                            <option selected>Open this select menu</option>
+
+                                            <option value="Normal">Normal</option>
+                                            <option value="Irrigation">Irrigation</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <input value="[]" type="hidden" name="fertilizer" class="form-control" id="fertilizer"
+                                      aria-describedby="emailHelp">
+                                    <div class="mt-3">
+                                        <label class="form-label">Fertilizers</label>
+                                        <select name="mbolea" id="fertilizer-select" multiple="" class="ui multiple fluid red search selection dropdown">
+                                        </select>
+                                    </div>
+                                    <!-- dropdown fertilizer amount-->
+                                    <div class="mt-3">
+                                        <div id="fertborderdiv" style="border-radius: 0px 0px; border: 2px dotted #6c7293">
+                                            <div class="m-2">
+                                                <label for="customweight" class="mx-3 form-label fst-italici" style="font-weight: bold; color: #6c7293">
+                                                    TOTAL FERTILIZER WEIGHT (in Kg)
+                                                    <small style="display: inline-block; color: #6c7293; font-weight: normal;">**Add the amount of individual fertilizer you recommend per farm size of {{farmsize}} hectras</small>
+                                                    <small id="fertamounterror" style="display: none; color: #eb1616; font-weight: normal;"></small>
+                                                </label>
+                                                <br />
+                                                <div style="display: flex; align-items: center;">
+                                                    <div class="">
+                                                        <div id="fertilizeramount" class="ui inline dropdown mx-3">
+                                                            <div class="text" id="defaultLabelfertilizer">
+                                                                Select one
+                                                            </div>
+                                                            <i class="dropdown icon"></i>
+                                                            <div class="menu" id="menuFertilizerAmount">
+                                                            </div> 
+                                                        </div>
+                                                    </div>
+                                                    <div class="">
+                                                        <input style="background: #95D5B2; border: 1px solid #6c7293" type="text" name="uzito" class="form-control" id="uzito"
+                                                        aria-describedby="emailHelp">
+                                                    </div>
+                                                    <div class="mx-3">
+                                                        <span id="addamountfert" style="cursor: pointer;" class="text-success">
+                                                            <i class="fa fa-plus"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <hr class="mx-3" />
+                                                <div class="mx-3" id="previewfertivalue">
+                                                     
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- dropdown end-->
+
+
+                                    <!-- this is where we'll add our array containing the values of fertilizer-name and its value in JSON-->
+                                    <input type="hidden" name="fweight" class="form-control" id="fweight"
+                                        aria-describedby="emailHelp">
+                 
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-xl-6">
+                            <div style="background: #fff" class="rounded h-100 p-4">
+                                <div class="row">
+                                    <div class="">
+                                        <label class="form-label">Crops</label>
+                                          <select name="mazao" id="crops-select" multiple="" class="ui multiple fluid red search selection dropdown">
+                                          </select>
+                                      </div>
+                                    
+                                    <div class="mt-3">
+                                        <div style="border-radius: 0px 0px; border: 2px dotted #6c7293">
+                                            <div class="m-2">
+                                                <label for="" class="mx-3 form-label fst-italici" style="font-weight: bold; color: #6c7293">
+                                                    TOTAL SEED AMOUNT (in {{farmsize}} hectras)
+                                                    <small style="display: inline-block; color: #6c7293; font-weight: normal;">**Add the total amount of seed per crop you recommend to be used in farm of {{farmsize}} hectras</small>
+                                                    <small id="seedamounterror" style="display: none; color: #eb1616; font-weight: normal;"></small>
+                                                    <span style="display: block;">
+                                                        Unit: 
+                                                        <input  id="unitKg" checked type="checkbox" /> <label class="mx-2" style="cursor: pointer;" for="unitKg"> Kilogram </label>
+                                                    </span>
+                                                </label>
+                                                <br />
+                                                <div style="display: flex; align-items: center;">
+                                                    <div class="">
+                                                        <div id="seedamount" class="ui inline dropdown mx-3">
+                                                            <div class="text" id="defaultLabelseed">
+                                                                Select one
+                                                            </div>
+                                                            <i class="dropdown icon"></i>
+                                                            <div class="menu" id="menuSeedAmount">
+                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="">
+                                                        <input style="background: #95D5B2; border: 1px solid #6c7293" type="text" name="idadiyambegu" class="form-control" id="idadiyambegu"
+                                                        aria-describedby="emailHelp">
+                                                    </div>
+                                                    <div class="mx-3">
+                                                        <span id="addamountseed" style="cursor: pointer;" class="text-success">
+                                                            <i class="fa fa-plus"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <hr class="mx-3" />
+                                                <div class="mx-3" id="previewseedvalue">
+                                                   
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- dropdown seed amount-->
+                                    <input type="hidden" name="seed" class="form-control" id="seed"
+                                    aria-describedby="emailHelp">
+
+                                    <!-- dropdown yield amount-->
+                                    <div class="mt-3">
+                                        <div style="border-radius: 0px 0px; border: 2px dotted #6c7293">
+                                            <div class="m-2">
+                                                <label for="" class="mx-3 form-label fst-italici" style="font-weight: bold; color: #6c7293">
+                                                    ESTIMATED YIELD (per 120kg)
+                                                    <small style="display: inline-block; color: #6c7293; font-weight: normal;">**Add the estimated output of given crop you recommend for full farm's size of {{farmsize}} hectras. <small class="text-uppercase text-success">Remember 1 = 120kg</small></small>
+                                                    <small id="yieldamounterr" style="display: none; color: #eb1616; font-weight: normal;"></small>
+                                                </label>
+                                                <br />
+                                                <div style="display: flex; align-items: center;">
+                                                    <div class="">
+                                                        <div id="totalyield" class="ui inline dropdown mx-3">
+                                                            <div class="text" id="defaultLabelyield">
+                                                                Select one
+                                                            </div>
+                                                            <i class="dropdown icon"></i>
+                                                            <div class="menu" id="menuYieldAmount">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="">
+                                                        <input style="background: #95D5B2; border: 1px solid #6c7293" type="text" name="estimatedoutput" class="form-control" id="estimatedoutput"
+                                                        aria-describedby="emailHelp">
+                                                    </div>
+                                                    <div class="mx-3">
+                                                        <span id="addyield" style="cursor: pointer;" class="text-success">
+                                                            <i class="fa fa-plus"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <hr class="mx-3" />
+                                                <div class="mx-3" id="previewoutput">
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- dropdown yield amount-->
+                                    
+                                    <input type="hidden" name="output" class="form-control" id="output"
+                                        aria-describedby="emailHelp">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            {% comment %} end of block {% endcomment %}
+
+            <!-- Recent Sales End -->
+            
+            <div class="container-fluid pt-4 px-4" style="margin-bottom: 20px">
+
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-6">
+                        <div style="background: #fff" class="rounded h-100 p-4">
+                            <h6 class="mb-4 fst-italici text-uppercase" style="color: #6c7293">Physical Test Results</h6>
+                            <div class="">
+                                <div style="font-weight: bold;" class="p-2">Soil color: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_color}}</span></div>
+                                <div style="font-weight: bold;" class="p-2">Soil temperature: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_temperature}}<sup>0</sup>C</span></div>
+                                <div style="font-weight: bold;" class="p-2">Soil structure: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_structure}}</span></div>
+                                <div style="font-weight: bold;" class="p-2">Soil texture: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_texture}}</span></div>
+                                <div style="font-weight: bold;" class="p-2">Soil form: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_form}}</span></div>
+                                <div style="font-weight: bold;" class="p-2">Soil porosity: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_porosity}}kg/m<sup>3</sup></span></div>
+                                <div style="font-weight: bold;" class="p-2">Bulk density: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.bulk_density}}kg/m<sup>3</sup></span></div>
+                                <div style="font-weight: bold;" class="p-2">Soil moisture: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_moisture}}ppm</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xl-6">
+                        <div style="background: #fff" class="rounded h-100 p-4">
+                            <h6 class="mb-4 fst-italici text-uppercase" style = "color: #6c7293">Chemical Test Results</h6>
+                            <div class="row">
+                                <div style="font-weight: bold;" class="p-2">Soil pH: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.soil_ph}}</span></div>
+                                <div style="font-weight: bold;" class="p-2">Phosphorus level: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.phosphorus_level}}ppm</span></div>
+                                <div style="font-weight: bold;" class="p-2">Potassium level: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.potassium_level}}ppm</span></div>
+                                <div style="font-weight: bold;" class="p-2">Nitrogen level: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.nitrogen_level}}ppm</span></div>
+                                <div style="font-weight: bold;" class="p-2">Organic matter: <span style="font-weight: normal; font-style: normal; margin-left: 10px">{{report.test_results.organic_matter}}ppm</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Content End -->
+
+
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-success btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- crops & fertilizers metadata-->
+    {% comment %} <script src={% static 'argonomist/js/cropsfertilizers.js' %}>
+    </script> {% endcomment %}
+
+
+
+    
+    
+    <script>
+        var seedamount = document.getElementById('menuSeedAmount')
+        var yieldamount = document.getElementById("menuYieldAmount")
+        
+        function onRemoveCoreLogic(crop_name_span, holdersDivs, amount, active_label, value) {
+            let removed_child;
+            for (let child of amount.children) {
+                if (child.innerText === value) {
+                    amount.removeChild(child)
+                    removed_child = child
+                    break;
+                }
+            }
+
+            if (removed_child) {
+                if(removed_child.innerText.trim().toString() === active_label.innerText.trim().toString()) {
+                    active_label.innerText = "Select one"
+                }
+            }
+
+            // from here...
+            console.log('holders div ', holdersDivs )
+
+            let toCleanDiv;
+            let targgedDivs = []
+            for (let div of holdersDivs) {
+                divs = Object.values(div.children).filter(value => value.className === crop_name_span)
+                targgedDivs = [...targgedDivs, ...divs]
+
+            }
+            console.log('targgedDivs ', targgedDivs)
+
+            for (let target of targgedDivs) {
+                if (target.innerText.trim().toString() === value.trim().toString()) {
+                    target.parentNode.parentNode.removeChild(target.parentNode)
+                }
+            }
+
+        }
+
+        $('#crops-select').dropdown({
+            values: [
+                {
+                    "name": "Abaca (Manila hemp)",
+                    "value": "Abaca (Manila hemp)"
+                },
+                {
+                    "name": "Alfalfa for fodder",
+                    "value": "Alfalfa for fodder"
+                },
+                {
+                    "name": "Alfalfa for seed ",
+                    "value": "Alfalfa for seed "
+                },
+                {
+                    "name": "Almond",
+                    "value": "Almond"
+                },
+                {
+                    "name": "Anise seeds",
+                    "value": "Anise seeds"
+                },
+                {
+                    "name": "Apple",
+                    "value": "Apple"
+                },
+                {
+                    "name": "Apricot",
+                    "value": "Apricot"
+                },
+                {
+                    "name": "Areca (betel nut)",
+                    "value": "Areca (betel nut)"
+                },
+                {
+                    "name": "Arracha",
+                    "value": "Arracha"
+                },
+                {
+                    "name": "Arrowroot",
+                    "value": "Arrowroot"
+                },
+                {
+                    "name": "Artichoke",
+                    "value": "Artichoke"
+                },
+                {
+                    "name": "Asparagus",
+                    "value": "Asparagus"
+                },
+                {
+                    "name": "Avocado",
+                    "value": "Avocado"
+                },
+                {
+                    "name": "Bajra (Pearl millet)",
+                    "value": "Bajra (Pearl millet)"
+                },
+                {
+                    "name": "Bambara groundnut",
+                    "value": "Bambara groundnut"
+                },
+                {
+                    "name": "Banana",
+                    "value": "Banana"
+                },
+                {
+                    "name": "Barley",
+                    "value": "Barley"
+                },
+                {
+                    "name": "Beans, dry, edible, for grains",
+                    "value": "Beans, dry, edible, for grains"
+                },
+                {
+                    "name": "Beans, harvested green",
+                    "value": "Beans, harvested green"
+                },
+                {
+                    "name": "Beet, fodder (mangel)",
+                    "value": "Beet, fodder (mangel)"
+                },
+                {
+                    "name": "Beet, red",
+                    "value": "Beet, red"
+                },
+                {
+                    "name": "Beet, sugar",
+                    "value": "Beet, sugar"
+                },
+                {
+                    "name": "Beet, sugar for fodder",
+                    "value": "Beet, sugar for fodder"
+                },
+                {
+                    "name": "Beet, sugar for seeds",
+                    "value": "Beet, sugar for seeds"
+                },
+                {
+                    "name": "Bergamot",
+                    "value": "Bergamot"
+                },
+                {
+                    "name": "Betel nut",
+                    "value": "Betel nut"
+                },
+                {
+                    "name": "Black pepper",
+                    "value": "Black pepper"
+                },
+                {
+                    "name": "Black wattle",
+                    "value": "Black wattle"
+                },
+                {
+                    "name": "Blackberries of various species",
+                    "value": "Blackberries of various species"
+                },
+                {
+                    "name": "Blueberry",
+                    "value": "Blueberry"
+                },
+                {
+                    "name": "Brazil nut",
+                    "value": "Brazil nut"
+                },
+                {
+                    "name": "Breadfruit",
+                    "value": "Breadfruit"
+                },
+                {
+                    "name": "Broad bean, dry",
+                    "value": "Broad bean, dry"
+                },
+                {
+                    "name": "Broad bean, harvested green",
+                    "value": "Broad bean, harvested green"
+                },
+                {
+                    "name": "Broccoli",
+                    "value": "Broccoli"
+                },
+                {
+                    "name": "Broom millet",
+                    "value": "Broom millet"
+                },
+                {
+                    "name": "Broom sorghum",
+                    "value": "Broom sorghum"
+                },
+                {
+                    "name": "Brussels sprouts",
+                    "value": "Brussels sprouts"
+                },
+                {
+                    "name": "Buckwheat",
+                    "value": "Buckwheat"
+                },
+                {
+                    "name": "Cabbage (red, white, Savoy)",
+                    "value": "Cabbage (red, white, Savoy)"
+                },
+                {
+                    "name": "Cabbage, Chinese",
+                    "value": "Cabbage, Chinese"
+                },
+                {
+                    "name": "Cabbage, for fodder ",
+                    "value": "Cabbage, for fodder "
+                },
+                {
+                    "name": "Cacao (cocoa) ",
+                    "value": "Cacao (cocoa) "
+                },
+                {
+                    "name": "Cantaloupe",
+                    "value": "Cantaloupe"
+                },
+                {
+                    "name": "Caraway seeds",
+                    "value": "Caraway seeds"
+                },
+                {
+                    "name": "Cardamom",
+                    "value": "Cardamom"
+                },
+                {
+                    "name": "Cardoon",
+                    "value": "Cardoon"
+                },
+                {
+                    "name": "Carob ",
+                    "value": "Carob "
+                },
+                {
+                    "name": "Carrot, edible",
+                    "value": "Carrot, edible"
+                },
+                {
+                    "name": "Carrot, for fodder",
+                    "value": "Carrot, for fodder"
+                },
+                {
+                    "name": "Cashew nuts",
+                    "value": "Cashew nuts"
+                },
+                {
+                    "name": "Cassava (manioc)",
+                    "value": "Cassava (manioc)"
+                },
+                {
+                    "name": "Castor bean ",
+                    "value": "Castor bean "
+                },
+                {
+                    "name": "Cauliflower",
+                    "value": "Cauliflower"
+                },
+                {
+                    "name": "Celeriac",
+                    "value": "Celeriac"
+                },
+                {
+                    "name": "Celery ",
+                    "value": "Celery "
+                },
+                {
+                    "name": "Chayote",
+                    "value": "Chayote"
+                },
+                {
+                    "name": "Cherry (all varieties)",
+                    "value": "Cherry (all varieties)"
+                },
+                {
+                    "name": "Chestnut ",
+                    "value": "Chestnut "
+                },
+                {
+                    "name": "Chickpea (gram pea)",
+                    "value": "Chickpea (gram pea)"
+                },
+                {
+                    "name": "Chicory",
+                    "value": "Chicory"
+                },
+                {
+                    "name": "Chicory for greens",
+                    "value": "Chicory for greens"
+                },
+                {
+                    "name": "Chili, dry (all varieties) ",
+                    "value": "Chili, dry (all varieties) "
+                },
+                {
+                    "name": "Chili, fresh (all varieties) ",
+                    "value": "Chili, fresh (all varieties) "
+                },
+                {
+                    "name": "Cinnamon ",
+                    "value": "Cinnamon "
+                },
+                {
+                    "name": "Citron",
+                    "value": "Citron"
+                },
+                {
+                    "name": "Citronella",
+                    "value": "Citronella"
+                },
+                {
+                    "name": "Clementine",
+                    "value": "Clementine"
+                },
+                {
+                    "name": "Clove ",
+                    "value": "Clove "
+                },
+                {
+                    "name": "Clover for fodder (all varieties)",
+                    "value": "Clover for fodder (all varieties)"
+                },
+                {
+                    "name": "Clover for seed (all varieties)",
+                    "value": "Clover for seed (all varieties)"
+                },
+                {
+                    "name": "Cocoa (cacao)",
+                    "value": "Cocoa (cacao)"
+                },
+                {
+                    "name": "Coconut ",
+                    "value": "Coconut "
+                },
+                {
+                    "name": "Cocoyam ",
+                    "value": "Cocoyam "
+                },
+                {
+                    "name": "Coffee",
+                    "value": "Coffee"
+                },
+                {
+                    "name": "Cola nut (all varieties) ",
+                    "value": "Cola nut (all varieties) "
+                },
+                {
+                    "name": "Colza (rapeseed) ",
+                    "value": "Colza (rapeseed) "
+                },
+                {
+                    "name": "Corn (maize), for cereals",
+                    "value": "Corn (maize), for cereals"
+                },
+                {
+                    "name": "Corn (maize), for silage ",
+                    "value": "Corn (maize), for silage "
+                },
+                {
+                    "name": "Corn (sweet), for vegetable ",
+                    "value": "Corn (sweet), for vegetable "
+                },
+                {
+                    "name": "Corn for salad ",
+                    "value": "Corn for salad "
+                },
+                {
+                    "name": "Cotton (all varieties) ",
+                    "value": "Cotton (all varieties) "
+                },
+                {
+                    "name": "Cottonseed (all varieties) ",
+                    "value": "Cottonseed (all varieties) "
+                },
+                {
+                    "name": "Cowpea, for grain",
+                    "value": "Cowpea, for grain"
+                },
+                {
+                    "name": "Cowpea, harvested green",
+                    "value": "Cowpea, harvested green"
+                },
+                {
+                    "name": "Cranberry",
+                    "value": "Cranberry"
+                },
+                {
+                    "name": "Cress ",
+                    "value": "Cress "
+                },
+                {
+                    "name": "Cucumber",
+                    "value": "Cucumber"
+                },
+                {
+                    "name": "Currants (all varieties)",
+                    "value": "Currants (all varieties)"
+                },
+                {
+                    "name": "Custard apple",
+                    "value": "Custard apple"
+                },
+                {
+                    "name": "Dasheen",
+                    "value": "Dasheen"
+                },
+                {
+                    "name": "Dates ",
+                    "value": "Dates "
+                },
+                {
+                    "name": "Drumstick tree ",
+                    "value": "Drumstick tree "
+                },
+                {
+                    "name": "Durra (sorghum) ",
+                    "value": "Durra (sorghum) "
+                },
+                {
+                    "name": "Durum wheat",
+                    "value": "Durum wheat"
+                },
+                {
+                    "name": "Earth pea",
+                    "value": "Earth pea"
+                },
+                {
+                    "name": "Edo (eddoe) ",
+                    "value": "Edo (eddoe) "
+                },
+                {
+                    "name": "Eggplant ",
+                    "value": "Eggplant "
+                },
+                {
+                    "name": "Endive ",
+                    "value": "Endive "
+                },
+                {
+                    "name": "Fennel ",
+                    "value": "Fennel "
+                },
+                {
+                    "name": "Fenugreek ",
+                    "value": "Fenugreek "
+                },
+                {
+                    "name": "Fig",
+                    "value": "Fig"
+                },
+                {
+                    "name": "Filbert (Hazelnut)",
+                    "value": "Filbert (Hazelnut)"
+                },
+                {
+                    "name": "Fique ",
+                    "value": "Fique "
+                },
+                {
+                    "name": "Flax ",
+                    "value": "Flax "
+                },
+                {
+                    "name": "Flax for oil seed (linseed)",
+                    "value": "Flax for oil seed (linseed)"
+                },
+                {
+                    "name": "Formio (New Zealand flax)",
+                    "value": "Formio (New Zealand flax)"
+                },
+                {
+                    "name": "Garlic, dry ",
+                    "value": "Garlic, dry "
+                },
+                {
+                    "name": "Garlic, green",
+                    "value": "Garlic, green"
+                },
+                {
+                    "name": "Geranium ",
+                    "value": "Geranium "
+                },
+                {
+                    "name": "Ginger ",
+                    "value": "Ginger "
+                },
+                {
+                    "name": "Gooseberry (all varieties) ",
+                    "value": "Gooseberry (all varieties) "
+                },
+                {
+                    "name": "Gourd ",
+                    "value": "Gourd "
+                },
+                {
+                    "name": "Gram pea (chickpea)",
+                    "value": "Gram pea (chickpea)"
+                },
+                {
+                    "name": "Grape ",
+                    "value": "Grape "
+                },
+                {
+                    "name": "Grapefruit ",
+                    "value": "Grapefruit "
+                },
+                {
+                    "name": "Grapes for raisins",
+                    "value": "Grapes for raisins"
+                },
+                {
+                    "name": "Grapes for table use",
+                    "value": "Grapes for table use"
+                },
+                {
+                    "name": "Grapes for wine",
+                    "value": "Grapes for wine"
+                },
+                {
+                    "name": "Grass esparto ",
+                    "value": "Grass esparto "
+                },
+                {
+                    "name": "Grass, orchard",
+                    "value": "Grass, orchard"
+                },
+                {
+                    "name": "Grass, Sudan ",
+                    "value": "Grass, Sudan "
+                },
+                {
+                    "name": "Groundnut (peanut) ",
+                    "value": "Groundnut (peanut) "
+                },
+                {
+                    "name": "Guava ",
+                    "value": "Guava "
+                },
+                {
+                    "name": "Guinea corn (sorghum) ",
+                    "value": "Guinea corn (sorghum) "
+                },
+                {
+                    "name": "Hazelnut (filbert) ",
+                    "value": "Hazelnut (filbert) "
+                },
+                {
+                    "name": "Hemp fibre ",
+                    "value": "Hemp fibre "
+                },
+                {
+                    "name": "Hemp, Manila (abaca)",
+                    "value": "Hemp, Manila (abaca)"
+                },
+                {
+                    "name": "Hemp, sun",
+                    "value": "Hemp, sun"
+                },
+                {
+                    "name": "Hempseed",
+                    "value": "Hempseed"
+                },
+                {
+                    "name": "Henequen",
+                    "value": "Henequen"
+                },
+                {
+                    "name": "Henna ",
+                    "value": "Henna "
+                },
+                {
+                    "name": "Hop ",
+                    "value": "Hop "
+                },
+                {
+                    "name": "Horse bean ",
+                    "value": "Horse bean "
+                },
+                {
+                    "name": "Horseradish ",
+                    "value": "Horseradish "
+                },
+                {
+                    "name": "Hybrid maize",
+                    "value": "Hybrid maize"
+                },
+                {
+                    "name": "Indigo ",
+                    "value": "Indigo "
+                },
+                {
+                    "name": "Jasmine",
+                    "value": "Jasmine"
+                },
+                {
+                    "name": "Jerusalem artichoke",
+                    "value": "Jerusalem artichoke"
+                },
+                {
+                    "name": "Jowar (sorghum)",
+                    "value": "Jowar (sorghum)"
+                },
+                {
+                    "name": "Jute ",
+                    "value": "Jute "
+                },
+                {
+                    "name": "Kale ",
+                    "value": "Kale "
+                },
+                {
+                    "name": "Kapok",
+                    "value": "Kapok"
+                },
+                {
+                    "name": "Kenaf",
+                    "value": "Kenaf"
+                },
+                {
+                    "name": "Kohlrabi",
+                    "value": "Kohlrabi"
+                },
+                {
+                    "name": "Lavender",
+                    "value": "Lavender"
+                },
+                {
+                    "name": "Leek",
+                    "value": "Leek"
+                },
+                {
+                    "name": "Lemon ",
+                    "value": "Lemon "
+                },
+                {
+                    "name": "Lemon grass",
+                    "value": "Lemon grass"
+                },
+                {
+                    "name": "Lentil ",
+                    "value": "Lentil "
+                },
+                {
+                    "name": "Lespedeza (all varieties) ",
+                    "value": "Lespedeza (all varieties) "
+                },
+                {
+                    "name": "Lettuce ",
+                    "value": "Lettuce "
+                },
+                {
+                    "name": "Lime, sour ",
+                    "value": "Lime, sour "
+                },
+                {
+                    "name": "Lime, sweet",
+                    "value": "Lime, sweet"
+                },
+                {
+                    "name": "Linseed (flax for oil seed)",
+                    "value": "Linseed (flax for oil seed)"
+                },
+                {
+                    "name": "Liquorice",
+                    "value": "Liquorice"
+                },
+                {
+                    "name": "Litchi",
+                    "value": "Litchi"
+                },
+                {
+                    "name": "Loquat",
+                    "value": "Loquat"
+                },
+                {
+                    "name": "Lupine ",
+                    "value": "Lupine "
+                },
+                {
+                    "name": "Macadamia (Queensland nut)",
+                    "value": "Macadamia (Queensland nut)"
+                },
+                {
+                    "name": "Mace ",
+                    "value": "Mace "
+                },
+                {
+                    "name": "Maguey ",
+                    "value": "Maguey "
+                },
+                {
+                    "name": "Maize (corn)",
+                    "value": "Maize (corn)"
+                },
+                {
+                    "name": "Maize (corn) for silage",
+                    "value": "Maize (corn) for silage"
+                },
+                {
+                    "name": "Maize (hybrid)",
+                    "value": "Maize (hybrid)"
+                },
+                {
+                    "name": "Maize, ordinary",
+                    "value": "Maize, ordinary"
+                },
+                {
+                    "name": "Mandarin",
+                    "value": "Mandarin"
+                },
+                {
+                    "name": "Mangel",
+                    "value": "Mangel"
+                },
+                {
+                    "name": "Mango",
+                    "value": "Mango"
+                },
+                {
+                    "name": "Manioc (cassava) ",
+                    "value": "Manioc (cassava) "
+                },
+                {
+                    "name": "Maslin (mixed cereals) ",
+                    "value": "Maslin (mixed cereals) "
+                },
+                {
+                    "name": "Medlar ",
+                    "value": "Medlar "
+                },
+                {
+                    "name": "Melon (except watermelon)",
+                    "value": "Melon (except watermelon)"
+                },
+                {
+                    "name": "Millet broom ",
+                    "value": "Millet broom "
+                },
+                {
+                    "name": "Millet, bajra ",
+                    "value": "Millet, bajra "
+                },
+                {
+                    "name": "Millet, bulrush ",
+                    "value": "Millet, bulrush "
+                },
+                {
+                    "name": "Millet, finger",
+                    "value": "Millet, finger"
+                },
+                {
+                    "name": "Millet, foxtail ",
+                    "value": "Millet, foxtail "
+                },
+                {
+                    "name": "Millet, Japanese ",
+                    "value": "Millet, Japanese "
+                },
+                {
+                    "name": "Millet, pearl (bajra, bulrush)",
+                    "value": "Millet, pearl (bajra, bulrush)"
+                },
+                {
+                    "name": "Millet, proso",
+                    "value": "Millet, proso"
+                },
+                {
+                    "name": "Mint (all varieties) ",
+                    "value": "Mint (all varieties) "
+                },
+                {
+                    "name": "Mulberry for fruit (all varieties)",
+                    "value": "Mulberry for fruit (all varieties)"
+                },
+                {
+                    "name": "Mulberry for silkworms",
+                    "value": "Mulberry for silkworms"
+                },
+                {
+                    "name": "Mushrooms",
+                    "value": "Mushrooms"
+                },
+                {
+                    "name": "Mustard",
+                    "value": "Mustard"
+                },
+                {
+                    "name": "Nectarine ",
+                    "value": "Nectarine "
+                },
+                {
+                    "name": "New Zealand flax (formio)",
+                    "value": "New Zealand flax (formio)"
+                },
+                {
+                    "name": "Niger ",
+                    "value": "Niger "
+                },
+                {
+                    "name": "Nutmeg",
+                    "value": "Nutmeg"
+                },
+                {
+                    "name": "Oats, for fodder",
+                    "value": "Oats, for fodder"
+                },
+                {
+                    "name": "Oats, for grain ",
+                    "value": "Oats, for grain "
+                },
+                {
+                    "name": "Oil palm ",
+                    "value": "Oil palm "
+                },
+                {
+                    "name": "Okra ",
+                    "value": "Okra "
+                },
+                {
+                    "name": "Olive ",
+                    "value": "Olive "
+                },
+                {
+                    "name": "Onion seed ",
+                    "value": "Onion seed "
+                },
+                {
+                    "name": "Onion, dry ",
+                    "value": "Onion, dry "
+                },
+                {
+                    "name": "Onion, green ",
+                    "value": "Onion, green "
+                },
+                {
+                    "name": "Opium ",
+                    "value": "Opium "
+                },
+                {
+                    "name": "Orange",
+                    "value": "Orange"
+                },
+                {
+                    "name": "Orange, bitter ",
+                    "value": "Orange, bitter "
+                },
+                {
+                    "name": "Ornamental plants ",
+                    "value": "Ornamental plants "
+                },
+                {
+                    "name": "Palm palmyra",
+                    "value": "Palm palmyra"
+                },
+                {
+                    "name": "Palm, kernel oil",
+                    "value": "Palm, kernel oil"
+                },
+                {
+                    "name": "Palm, oil",
+                    "value": "Palm, oil"
+                },
+                {
+                    "name": "Palm, sago ",
+                    "value": "Palm, sago "
+                },
+                {
+                    "name": "Papaya (pawpaw)",
+                    "value": "Papaya (pawpaw)"
+                },
+                {
+                    "name": "Parsnip",
+                    "value": "Parsnip"
+                },
+                {
+                    "name": "Pea, edible dry, for grain",
+                    "value": "Pea, edible dry, for grain"
+                },
+                {
+                    "name": "Pea, harvested green",
+                    "value": "Pea, harvested green"
+                },
+                {
+                    "name": "Peach ",
+                    "value": "Peach "
+                },
+                {
+                    "name": "Peanut (groundnut)",
+                    "value": "Peanut (groundnut)"
+                },
+                {
+                    "name": "Pear ",
+                    "value": "Pear "
+                },
+                {
+                    "name": "Pecan",
+                    "value": "Pecan"
+                },
+                {
+                    "name": "Pepper, black ",
+                    "value": "Pepper, black "
+                },
+                {
+                    "name": "Pepper, dry ",
+                    "value": "Pepper, dry "
+                },
+                {
+                    "name": "Persimmon ",
+                    "value": "Persimmon "
+                },
+                {
+                    "name": "Pigeon pea",
+                    "value": "Pigeon pea"
+                },
+                {
+                    "name": "Pineapple ",
+                    "value": "Pineapple "
+                },
+                {
+                    "name": "Pistachio nut ",
+                    "value": "Pistachio nut "
+                },
+                {
+                    "name": "Plantain ",
+                    "value": "Plantain "
+                },
+                {
+                    "name": "Plum ",
+                    "value": "Plum "
+                },
+                {
+                    "name": "Pomegranate",
+                    "value": "Pomegranate"
+                },
+                {
+                    "name": "Pomelo ",
+                    "value": "Pomelo "
+                },
+                {
+                    "name": "Poppy seed ",
+                    "value": "Poppy seed "
+                },
+                {
+                    "name": "Potato ",
+                    "value": "Potato "
+                },
+                {
+                    "name": "Potato, sweet ",
+                    "value": "Potato, sweet "
+                },
+                {
+                    "name": "Prune",
+                    "value": "Prune"
+                },
+                {
+                    "name": "Pumpkin, edible ",
+                    "value": "Pumpkin, edible "
+                },
+                {
+                    "name": "Pumpkin, for fodder",
+                    "value": "Pumpkin, for fodder"
+                },
+                {
+                    "name": "Pyrethum ",
+                    "value": "Pyrethum "
+                },
+                {
+                    "name": "Quebracho ",
+                    "value": "Quebracho "
+                },
+                {
+                    "name": "Queensland nut ",
+                    "value": "Queensland nut "
+                },
+                {
+                    "name": "Quince ",
+                    "value": "Quince "
+                },
+                {
+                    "name": "Quinine",
+                    "value": "Quinine"
+                },
+                {
+                    "name": "Quinoa",
+                    "value": "Quinoa"
+                },
+                {
+                    "name": "Radish",
+                    "value": "Radish"
+                },
+                {
+                    "name": "Ramie ",
+                    "value": "Ramie "
+                },
+                {
+                    "name": "Rapeseed (colza)",
+                    "value": "Rapeseed (colza)"
+                },
+                {
+                    "name": "Raspberry (all varieties)",
+                    "value": "Raspberry (all varieties)"
+                },
+                {
+                    "name": "Red beet",
+                    "value": "Red beet"
+                },
+                {
+                    "name": "Redtop ",
+                    "value": "Redtop "
+                },
+                {
+                    "name": "Rhea ",
+                    "value": "Rhea "
+                },
+                {
+                    "name": "Rhubarb",
+                    "value": "Rhubarb"
+                },
+                {
+                    "name": "Rice ",
+                    "value": "Rice "
+                },
+                {
+                    "name": "Rose ",
+                    "value": "Rose "
+                },
+                {
+                    "name": "Rubber ",
+                    "value": "Rubber "
+                },
+                {
+                    "name": "Rutabaga (swede) ",
+                    "value": "Rutabaga (swede) "
+                },
+                {
+                    "name": "Rye ",
+                    "value": "Rye "
+                },
+                {
+                    "name": "Ryegrass seed ",
+                    "value": "Ryegrass seed "
+                },
+                {
+                    "name": "Safflower",
+                    "value": "Safflower"
+                },
+                {
+                    "name": "Sainfoin ",
+                    "value": "Sainfoin "
+                },
+                {
+                    "name": "Salsify ",
+                    "value": "Salsify "
+                },
+                {
+                    "name": "Sapodilla",
+                    "value": "Sapodilla"
+                },
+                {
+                    "name": "Satsuma (mandarin/tangerine) ",
+                    "value": "Satsuma (mandarin/tangerine) "
+                },
+                {
+                    "name": "Scorzonera – black salsify",
+                    "value": "Scorzonera – black salsify"
+                },
+                {
+                    "name": "Sesame ",
+                    "value": "Sesame "
+                },
+                {
+                    "name": "Shea butter (nut)",
+                    "value": "Shea butter (nut)"
+                },
+                {
+                    "name": "Sisal ",
+                    "value": "Sisal "
+                },
+                {
+                    "name": "Sorghum ",
+                    "value": "Sorghum "
+                },
+                {
+                    "name": "Sorghum, broom",
+                    "value": "Sorghum, broom"
+                },
+                {
+                    "name": "Sorghum, durra",
+                    "value": "Sorghum, durra"
+                },
+                {
+                    "name": "Sorghum, Guinea corn",
+                    "value": "Sorghum, Guinea corn"
+                },
+                {
+                    "name": "Sorghum, jowar ",
+                    "value": "Sorghum, jowar "
+                },
+                {
+                    "name": "Sorghum, sweet ",
+                    "value": "Sorghum, sweet "
+                },
+                {
+                    "name": "Soybean ",
+                    "value": "Soybean "
+                },
+                {
+                    "name": "Soybean hay",
+                    "value": "Soybean hay"
+                },
+                {
+                    "name": "Spelt wheat",
+                    "value": "Spelt wheat"
+                },
+                {
+                    "name": "Spinach",
+                    "value": "Spinach"
+                },
+                {
+                    "name": "Squash ",
+                    "value": "Squash "
+                },
+                {
+                    "name": "Strawberry",
+                    "value": "Strawberry"
+                },
+                {
+                    "name": "Sugar beet",
+                    "value": "Sugar beet"
+                },
+                {
+                    "name": "Sugar beet for fodder ",
+                    "value": "Sugar beet for fodder "
+                },
+                {
+                    "name": "Sugar beet for seed",
+                    "value": "Sugar beet for seed"
+                },
+                {
+                    "name": "Sugarcane for fodder ",
+                    "value": "Sugarcane for fodder "
+                },
+                {
+                    "name": "Sugarcane for sugar or alcohol",
+                    "value": "Sugarcane for sugar or alcohol"
+                },
+                {
+                    "name": "Sugarcane for thatching",
+                    "value": "Sugarcane for thatching"
+                },
+                {
+                    "name": "Sunflower for fodder ",
+                    "value": "Sunflower for fodder "
+                },
+                {
+                    "name": "Sunflower for oil seed ",
+                    "value": "Sunflower for oil seed "
+                },
+                {
+                    "name": "Sunhemp",
+                    "value": "Sunhemp"
+                },
+                {
+                    "name": "Swede ",
+                    "value": "Swede "
+                },
+                {
+                    "name": "Swede for fodder",
+                    "value": "Swede for fodder"
+                },
+                {
+                    "name": "Sweet corn ",
+                    "value": "Sweet corn "
+                },
+                {
+                    "name": "Sweet lime ",
+                    "value": "Sweet lime "
+                },
+                {
+                    "name": "Sweet pepper ",
+                    "value": "Sweet pepper "
+                },
+                {
+                    "name": "Sweet potato ",
+                    "value": "Sweet potato "
+                },
+                {
+                    "name": "Sweet sorghum",
+                    "value": "Sweet sorghum"
+                },
+                {
+                    "name": "Tangerine ",
+                    "value": "Tangerine "
+                },
+                {
+                    "name": "Tannia ",
+                    "value": "Tannia "
+                },
+                {
+                    "name": "Tapioca (cassava)",
+                    "value": "Tapioca (cassava)"
+                },
+                {
+                    "name": "Taro ",
+                    "value": "Taro "
+                },
+                {
+                    "name": "Tea ",
+                    "value": "Tea "
+                },
+                {
+                    "name": "Tef ",
+                    "value": "Tef "
+                },
+                {
+                    "name": "Timothy ",
+                    "value": "Timothy "
+                },
+                {
+                    "name": "Tobacco ",
+                    "value": "Tobacco "
+                },
+                {
+                    "name": "Tomato ",
+                    "value": "Tomato "
+                },
+                {
+                    "name": "Trefoil ",
+                    "value": "Trefoil "
+                },
+                {
+                    "name": "Triticale for fodder",
+                    "value": "Triticale for fodder"
+                },
+                {
+                    "name": "Tung tree ",
+                    "value": "Tung tree "
+                },
+                {
+                    "name": "Turnip, edible ",
+                    "value": "Turnip, edible "
+                },
+                {
+                    "name": "Turnip, for fodder",
+                    "value": "Turnip, for fodder"
+                },
+                {
+                    "name": "Urena (Congo jute) ",
+                    "value": "Urena (Congo jute) "
+                },
+                {
+                    "name": "Vanilla ",
+                    "value": "Vanilla "
+                },
+                {
+                    "name": "Vetch for grain ",
+                    "value": "Vetch for grain "
+                },
+                {
+                    "name": "Walnut",
+                    "value": "Walnut"
+                },
+                {
+                    "name": "Watermelon",
+                    "value": "Watermelon"
+                },
+                {
+                    "name": "Wheat ",
+                    "value": "Wheat "
+                },
+                {
+                    "name": "Yam",
+                    "value": "Yam"
+                },
+                {
+                    "name": "Yerba mate",
+                    "value": "Yerba mate"
+                }
+            ],
+            onAdd: (value, text) => {
+                let arr = JSON.parse(document.getElementById('crop').value)
+                arr.push(value)
+                document.getElementById('crop').value = JSON.stringify(arr)
+                var item = document.createElement("div")
+                item.className = "item"
+                item.innerText = value
+                
+                yieldamount.appendChild(item) // Hii inakataa ku-append hizi label
+                
+                var duplicatedItem = document.createElement("div")
+                duplicatedItem.className = "item"
+                duplicatedItem.innerText = value
+                
+                seedamount.appendChild(duplicatedItem) 
+
+
+            },
+            onRemove: (value, text) => {
+
+                console.log('daah ', value, text)
+                let arr = JSON.parse(document.getElementById('crop').value)
+                arr.splice(arr.indexOf(value), 1)
+                document.getElementById('crop').value = JSON.stringify(arr)
+                
+                let seed_removed_child;
+                let yield_removed_child;
+                let seed_active_label = document.getElementById('defaultLabelseed')
+                let yield_active_label = document.getElementById("defaultLabelyield")
+                let seed_holdersDivs = document.getElementsByClassName('seedvalue-holder')
+                let yield_holdersDivs = document.getElementsByClassName('yieldvalue-holder')
+
+                onRemoveCoreLogic("seed-name fst-italici", Object.values(seed_holdersDivs), seedamount, seed_active_label, value)
+
+                onRemoveCoreLogic('yield-crop-name fst-italici', Object.values(yield_holdersDivs), yieldamount, yield_active_label, value)
+                
+            }
+        })
+        
+        var fertamount = document.getElementById("menuFertilizerAmount")
+        console.log('fert amount ', fertamount)
+        {% comment %} console.log('submit btn ', document.getElementById("completebtn") ) {% endcomment %}
+        
+        $('#fertilizer-select').dropdown({
+            values: [
+                {
+                    "name": "Urea 46%N",
+                    "value": "Urea 46%N"
+                },
+                {
+                    "name": "Di-Ammonium Phosphate (DAP)",
+                    "value": "Di-Ammonium Phosphate (DAP)"
+                },
+                {
+                    "name": "Mono Ammonium Phosphate (MAP) ",
+                    "value": "Mono Ammonium Phosphate (MAP) "
+                },
+                {
+                    "name": "Calcium Ammonium Nitrate (CAN)",
+                    "value": "Calcium Ammonium Nitrate (CAN)"
+                },
+                {
+                    "name": "Ammonium Sulphate (SA)",
+                    "value": "Ammonium Sulphate (SA)"
+                },
+                {
+                    "name": "Triple Super Phosphate (TSP)",
+                    "value": "Triple Super Phosphate (TSP)"
+                },
+                {
+                    "name": "Potassium Chloride (Muriate of Potash)- MOP",
+                    "value": "Potassium Chloride (Muriate of Potash)- MOP"
+                },
+                {
+                    "name": "NPK 25:5:5",
+                    "value": "NPK 25:5:5"
+                },
+                {
+                    "name": "NPK 17:17:17 ",
+                    "value": "NPK 17:17:17 "
+                },
+                {
+                    "name": "NPK 16:16:16 ",
+                    "value": "NPK 16:16:16 "
+                },
+                {
+                    "name": "NPK 20:10:10 ",
+                    "value": "NPK 20:10:10 "
+                },
+                {
+                    "name": "NPK 10:18:24 ",
+                    "value": "NPK 10:18:24 "
+                },
+                {
+                    "name": "NPK",
+                    "value": "NPK"
+                },
+                {
+                    "name": "Coating Material (Avail, Nutris)",
+                    "value": "Coating Material (Avail, Nutris)"
+                },
+                {
+                    "name": "Minjingu Nafaka plus",
+                    "value": "Minjingu Nafaka plus"
+                },
+                {
+                    "name": "NPK 23:10:05 ",
+                    "value": "NPK 23:10:05 "
+                },
+                {
+                    "name": "NPK 23:21:0 + 4 S ",
+                    "value": "NPK 23:21:0 + 4 S "
+                },
+                {
+                    "name": "NPK 22:6:12",
+                    "value": "NPK 22:6:12"
+                },
+                {
+                    "name": "Poly NPK 17:17:17",
+                    "value": "Poly NPK 17:17:17"
+                },
+                {
+                    "name": "NPK 15:9:20+Trace Elements",
+                    "value": "NPK 15:9:20+Trace Elements"
+                },
+                {
+                    "name": "S Poly NPK 08:14:19",
+                    "value": "S Poly NPK 08:14:19"
+                },
+                {
+                    "name": "Poly NPK 08:14:19",
+                    "value": "Poly NPK 08:14:19"
+                },
+                {
+                    "name": "Booster IIC ",
+                    "value": "Booster IIC "
+                },
+                {
+                    "name": "NPK 15:15:15",
+                    "value": "NPK 15:15:15"
+                },
+                {
+                    "name": "Maxi MKP",
+                    "value": "Maxi MKP"
+                },
+                {
+                    "name": "Maxi KS",
+                    "value": "Maxi KS"
+                },
+                {
+                    "name": "Max Magna N ",
+                    "value": "Max Magna N "
+                },
+                {
+                    "name": "Agro Leaf Power Calcium",
+                    "value": "Agro Leaf Power Calcium"
+                },
+                {
+                    "name": "Agro Leaf Power High P",
+                    "value": "Agro Leaf Power High P"
+                },
+                {
+                    "name": "Agro Leaf Power Total",
+                    "value": "Agro Leaf Power Total"
+                },
+                {
+                    "name": "Agro Feed Plus",
+                    "value": "Agro Feed Plus"
+                },
+                {
+                    "name": "MAXI Map ",
+                    "value": "MAXI Map "
+                },
+                {
+                    "name": "Agro Leaf Power Magnesium",
+                    "value": "Agro Leaf Power Magnesium"
+                },
+                {
+                    "name": "Easy grow starter",
+                    "value": "Easy grow starter"
+                },
+                {
+                    "name": "Pot Phos",
+                    "value": "Pot Phos"
+                },
+                {
+                    "name": "Agriculture Lime (Calcium Carbonate)",
+                    "value": "Agriculture Lime (Calcium Carbonate)"
+                },
+                {
+                    "name": "Agriculture Gypsum (Calcium Sulphate)",
+                    "value": "Agriculture Gypsum (Calcium Sulphate)"
+                },
+                {
+                    "name": "Easy grow Flower and Fruits",
+                    "value": "Easy grow Flower and Fruits"
+                },
+                {
+                    "name": "Easy gro Vegetative ",
+                    "value": "Easy gro Vegetative "
+                },
+                {
+                    "name": "MAXI Magna S",
+                    "value": "MAXI Magna S"
+                },
+                {
+                    "name": "MAXI Calci N ",
+                    "value": "MAXI Calci N "
+                },
+                {
+                    "name": "MAXI K",
+                    "value": "MAXI K"
+                },
+                {
+                    "name": "Potassium Nitrate",
+                    "value": "Potassium Nitrate"
+                },
+                {
+                    "name": "Nutrivant Plus Malt Barley",
+                    "value": "Nutrivant Plus Malt Barley"
+                },
+                {
+                    "name": "Nutrivant Plus Potato",
+                    "value": "Nutrivant Plus Potato"
+                },
+                {
+                    "name": "Max More",
+                    "value": "Max More"
+                },
+                {
+                    "name": "Novacid",
+                    "value": "Novacid"
+                },
+                {
+                    "name": "Nutrivant Plus Rice",
+                    "value": "Nutrivant Plus Rice"
+                },
+                {
+                    "name": "Nova N:P:K + TE",
+                    "value": "Nova N:P:K + TE"
+                },
+                {
+                    "name": "Nova N:P:K",
+                    "value": "Nova N:P:K"
+                },
+                {
+                    "name": "Nutrivant",
+                    "value": "Nutrivant"
+                },
+                {
+                    "name": "Minjingu Mazao NPS",
+                    "value": "Minjingu Mazao NPS"
+                },
+                {
+                    "name": "Yaraliva Nitrabor",
+                    "value": "Yaraliva Nitrabor"
+                },
+                {
+                    "name": "Yaravela Amidas",
+                    "value": "Yaravela Amidas"
+                },
+                {
+                    "name": "Yaramila Winner",
+                    "value": "Yaramila Winner"
+                },
+                {
+                    "name": "Yarabela Sulfan",
+                    "value": "Yarabela Sulfan"
+                },
+                {
+                    "name": "Agroblen",
+                    "value": "Agroblen"
+                },
+                {
+                    "name": "Poly-Booster",
+                    "value": "Poly-Booster"
+                },
+                {
+                    "name": "Potassium Nitrate",
+                    "value": "Potassium Nitrate"
+                },
+                {
+                    "name": "Magnesium Sulphate",
+                    "value": "Magnesium Sulphate"
+                },
+                {
+                    "name": "NPK 13:02:44",
+                    "value": "NPK 13:02:44"
+                },
+                {
+                    "name": "Nutrivant Plus",
+                    "value": "Nutrivant Plus"
+                },
+                {
+                    "name": "Kyto Booster ",
+                    "value": "Kyto Booster "
+                },
+                {
+                    "name": "Manganese 500g/L",
+                    "value": "Manganese 500g/L"
+                },
+                {
+                    "name": "Fe Chalate",
+                    "value": "Fe Chalate"
+                },
+                {
+                    "name": "NPK 10:10:24",
+                    "value": "NPK 10:10:24"
+                },
+                {
+                    "name": "Sumicoat303",
+                    "value": "Sumicoat303"
+                },
+                {
+                    "name": "NPK 22:06:12",
+                    "value": "NPK 22:06:12"
+                },
+                {
+                    "name": "Omex foliar",
+                    "value": "Omex foliar"
+                },
+                {
+                    "name": "Biofix",
+                    "value": "Biofix"
+                },
+                {
+                    "name": "Agrigrow Starter",
+                    "value": "Agrigrow Starter"
+                },
+                {
+                    "name": "Legumefix",
+                    "value": "Legumefix"
+                },
+                {
+                    "name": "Granubor Natur",
+                    "value": "Granubor Natur"
+                },
+                {
+                    "name": "Sulfur coated CAN",
+                    "value": "Sulfur coated CAN"
+                },
+                {
+                    "name": "Activit",
+                    "value": "Activit"
+                },
+                {
+                    "name": "Bontera",
+                    "value": "Bontera"
+                },
+                {
+                    "name": "NPK 17:21:11",
+                    "value": "NPK 17:21:11"
+                },
+                {
+                    "name": "Green Sea",
+                    "value": "Green Sea"
+                },
+                {
+                    "name": "Dodoma Aglime",
+                    "value": "Dodoma Aglime"
+                },
+                {
+                    "name": "Multi K",
+                    "value": "Multi K"
+                },
+                {
+                    "name": "Wuxual Macromix",
+                    "value": "Wuxual Macromix"
+                },
+                {
+                    "name": "Polyfeed",
+                    "value": "Polyfeed"
+                },
+                {
+                    "name": "Polycoffee",
+                    "value": "Polycoffee"
+                },
+                {
+                    "name": "Mono Potassium Phosphate",
+                    "value": "Mono Potassium Phosphate"
+                },
+                {
+                    "name": "NPK 8:24:16",
+                    "value": "NPK 8:24:16"
+                },
+                {
+                    "name": "Minjingu Organic Hyperphosphate (Powder)",
+                    "value": "Minjingu Organic Hyperphosphate (Powder)"
+                },
+                {
+                    "name": "Sugar Oemff",
+                    "value": "Sugar Oemff"
+                },
+                {
+                    "name": "Polihalite",
+                    "value": "Polihalite"
+                },
+                {
+                    "name": "Synthentic polyhalite",
+                    "value": "Synthentic polyhalite"
+                },
+                {
+                    "name": "Poly NPK 20:10:10",
+                    "value": "Poly NPK 20:10:10"
+                },
+                {
+                    "name": "S Poly NPK 20:10:10",
+                    "value": "S Poly NPK 20:10:10"
+                },
+                {
+                    "name": "S Poly NPK 17:17:17",
+                    "value": "S Poly NPK 17:17:17"
+                },
+                {
+                    "name": "Bioflush",
+                    "value": "Bioflush"
+                },
+                {
+                    "name": "Yad Bio Vitalizer",
+                    "value": "Yad Bio Vitalizer"
+                },
+                {
+                    "name": "Positive booster plus",
+                    "value": "Positive booster plus"
+                },
+                {
+                    "name": "Falmax O.P.F",
+                    "value": "Falmax O.P.F"
+                },
+                {
+                    "name": "Kristal (Magnesium Sulphate)",
+                    "value": "Kristal (Magnesium Sulphate)"
+                },
+                {
+                    "name": "Fruit & flower NPIC",
+                    "value": "Fruit & flower NPIC"
+                },
+                {
+                    "name": "Yara rega",
+                    "value": "Yara rega"
+                },
+                {
+                    "name": "Osmocote",
+                    "value": "Osmocote"
+                },
+                {
+                    "name": "Boom flower",
+                    "value": "Boom flower"
+                },
+                {
+                    "name": "Snow fert",
+                    "value": "Snow fert"
+                },
+                {
+                    "name": "Kynoplus",
+                    "value": "Kynoplus"
+                },
+                {
+                    "name": "Green Gold",
+                    "value": "Green Gold"
+                },
+                {
+                    "name": "Kynopor",
+                    "value": "Kynopor"
+                },
+                {
+                    "name": "Mo-quick",
+                    "value": "Mo-quick"
+                },
+                {
+                    "name": "Foliar Booster Potato NPK 14:2",
+                    "value": "Foliar Booster Potato NPK 14:2"
+                },
+                {
+                    "name": "Foliar Booster High P, NPK 13:",
+                    "value": "Foliar Booster High P, NPK 13:"
+                },
+                {
+                    "name": "Crop Master NPK 24:18:18",
+                    "value": "Crop Master NPK 24:18:18"
+                },
+                {
+                    "name": "Foliar Booster High N NPK 31:1",
+                    "value": "Foliar Booster High N NPK 31:1"
+                },
+                {
+                    "name": "Foliar Booster high K NPK 15:1",
+                    "value": "Foliar Booster high K NPK 15:1"
+                },
+                {
+                    "name": "NPS",
+                    "value": "NPS"
+                },
+                {
+                    "name": "Sumi Coat 60",
+                    "value": "Sumi Coat 60"
+                },
+                {
+                    "name": "Synergizer",
+                    "value": "Synergizer"
+                },
+                {
+                    "name": "Gro plus",
+                    "value": "Gro plus"
+                },
+                {
+                    "name": "Vita booster plus",
+                    "value": "Vita booster plus"
+                },
+                {
+                    "name": "Fast grow fruit & Flower",
+                    "value": "Fast grow fruit & Flower"
+                },
+                {
+                    "name": "Fast grow vetetative",
+                    "value": "Fast grow vetetative"
+                },
+                {
+                    "name": "Black alg",
+                    "value": "Black alg"
+                },
+                {
+                    "name": "Almina",
+                    "value": "Almina"
+                },
+                {
+                    "name": "Agromaster",
+                    "value": "Agromaster"
+                },
+                {
+                    "name": "Nov Acid",
+                    "value": "Nov Acid"
+                },
+                {
+                    "name": "Novacid",
+                    "value": "Novacid"
+                },
+                {
+                    "name": "Omex Foliar Feed",
+                    "value": "Omex Foliar Feed"
+                },
+                {
+                    "name": "Omex Murex K",
+                    "value": "Omex Murex K"
+                },
+                {
+                    "name": "Omex CalMax",
+                    "value": "Omex CalMax"
+                },
+                {
+                    "name": "Biopower (Grow Power)",
+                    "value": "Biopower (Grow Power)"
+                },
+                {
+                    "name": "BioForce",
+                    "value": "BioForce"
+                },
+                {
+                    "name": "Berrylon",
+                    "value": "Berrylon"
+                },
+                {
+                    "name": "Biopower plus",
+                    "value": "Biopower plus"
+                },
+                {
+                    "name": "Wuxal Super Amin",
+                    "value": "Wuxal Super Amin"
+                },
+                {
+                    "name": "Wuxal Microplant",
+                    "value": "Wuxal Microplant"
+                },
+                {
+                    "name": "Amcolon Suspension",
+                    "value": "Amcolon Suspension"
+                },
+                {
+                    "name": "Amcopaste",
+                    "value": "Amcopaste"
+                },
+                {
+                    "name": "Amcolon",
+                    "value": "Amcolon"
+                },
+                {
+                    "name": "Mofcal",
+                    "value": "Mofcal"
+                },
+                {
+                    "name": "Amcopotato",
+                    "value": "Amcopotato"
+                },
+                {
+                    "name": "Amcofert",
+                    "value": "Amcofert"
+                },
+                {
+                    "name": "Amco KTS",
+                    "value": "Amco KTS"
+                },
+                {
+                    "name": "Goldfert",
+                    "value": "Goldfert"
+                },
+                {
+                    "name": "Mult N",
+                    "value": "Mult N"
+                },
+                {
+                    "name": "Foliboost",
+                    "value": "Foliboost"
+                },
+                {
+                    "name": "Omya Magprill",
+                    "value": "Omya Magprill"
+                },
+                {
+                    "name": "Omya Calciprill 110-LF",
+                    "value": "Omya Calciprill 110-LF"
+                },
+                {
+                    "name": "Bioenzyme",
+                    "value": "Bioenzyme"
+                },
+                {
+                    "name": "Foltron Plus",
+                    "value": "Foltron Plus"
+                },
+                {
+                    "name": "Pilatus",
+                    "value": "Pilatus"
+                },
+                {
+                    "name": "YaraMila Otesha",
+                    "value": "YaraMila Otesha"
+                },
+                {
+                    "name": "Bio - TBB",
+                    "value": "Bio - TBB"
+                },
+                {
+                    "name": "Bio - TRENT",
+                    "value": "Bio - TRENT"
+                },
+                {
+                    "name": "Kilimo Booster Plus",
+                    "value": "Kilimo Booster Plus"
+                },
+                {
+                    "name": "Sulphur Maji",
+                    "value": "Sulphur Maji"
+                },
+                {
+                    "name": "Vegmax",
+                    "value": "Vegmax"
+                },
+                {
+                    "name": "PK Fertilizer",
+                    "value": "PK Fertilizer"
+                },
+                {
+                    "name": "Fruit King",
+                    "value": "Fruit King"
+                },
+                {
+                    "name": "Root King",
+                    "value": "Root King"
+                },
+                {
+                    "name": "Cytokinin Moreking",
+                    "value": "Cytokinin Moreking"
+                },
+                {
+                    "name": "Nutriplant Organic Plus Fertilizer",
+                    "value": "Nutriplant Organic Plus Fertilizer"
+                },
+                {
+                    "name": "Tecamin Brix",
+                    "value": "Tecamin Brix"
+                },
+                {
+                    "name": "Tecnokel Amino Cab",
+                    "value": "Tecnokel Amino Cab"
+                },
+                {
+                    "name": "Fertigrain Start",
+                    "value": "Fertigrain Start"
+                },
+                {
+                    "name": "Agriphyt contact ZnMn",
+                    "value": "Agriphyt contact ZnMn"
+                },
+                {
+                    "name": "Controlphyt",
+                    "value": "Controlphyt"
+                },
+                {
+                    "name": "Kanmetal",
+                    "value": "Kanmetal"
+                },
+                {
+                    "name": "Kankompoze",
+                    "value": "Kankompoze"
+                },
+                {
+                    "name": "Kangrow",
+                    "value": "Kangrow"
+                },
+                {
+                    "name": "Kanpotas",
+                    "value": "Kanpotas"
+                },
+                {
+                    "name": "Compound D",
+                    "value": "Compound D"
+                },
+                {
+                    "name": "Hai 450",
+                    "value": "Hai 450"
+                },
+                {
+                    "name": "Alvirus",
+                    "value": "Alvirus"
+                },
+                {
+                    "name": "D.I Grow ",
+                    "value": "D.I Grow "
+                },
+                {
+                    "name": "Agri Grow Vegetative",
+                    "value": "Agri Grow Vegetative"
+                },
+                {
+                    "name": "Agrigrow Fruiting& Flowering",
+                    "value": "Agrigrow Fruiting& Flowering"
+                },
+                {
+                    "name": "Allwin Top",
+                    "value": "Allwin Top"
+                },
+                {
+                    "name": "Agrichem Folia",
+                    "value": "Agrichem Folia"
+                },
+                {
+                    "name": "Yara Vita Trace BZ",
+                    "value": "Yara Vita Trace BZ"
+                },
+                {
+                    "name": "Yara Vita Zintrac 700 ",
+                    "value": "Yara Vita Zintrac 700 "
+                },
+                {
+                    "name": "Yara vita coptrac dual",
+                    "value": "Yara vita coptrac dual"
+                },
+                {
+                    "name": "Mo-wonder",
+                    "value": "Mo-wonder"
+                },
+                {
+                    "name": "Mo-top",
+                    "value": "Mo-top"
+                },
+                {
+                    "name": "Mo-eliixer",
+                    "value": "Mo-eliixer"
+                },
+                {
+                    "name": "Elit N",
+                    "value": "Elit N"
+                },
+                {
+                    "name": "Truva",
+                    "value": "Truva"
+                },
+                {
+                    "name": "Safir 21",
+                    "value": "Safir 21"
+                },
+                {
+                    "name": "Zincop",
+                    "value": "Zincop"
+                },
+                {
+                    "name": "Exelans",
+                    "value": "Exelans"
+                },
+                {
+                    "name": "Nessmix",
+                    "value": "Nessmix"
+                },
+                {
+                    "name": "Sweet K ",
+                    "value": "Sweet K "
+                },
+                {
+                    "name": "Erth Food",
+                    "value": "Erth Food"
+                },
+                {
+                    "name": "NPK Zn",
+                    "value": "NPK Zn"
+                },
+                {
+                    "name": "Golden leaf tobacco",
+                    "value": "Golden leaf tobacco"
+                },
+                {
+                    "name": "Caan plus top dressing",
+                    "value": "Caan plus top dressing"
+                },
+                {
+                    "name": "Mielle oemf",
+                    "value": "Mielle oemf"
+                },
+                {
+                    "name": "Veggie oemf",
+                    "value": "Veggie oemf"
+                },
+                {
+                    "name": "Oc-booster ",
+                    "value": "Oc-booster "
+                },
+                {
+                    "name": "Rizoliq Soy ",
+                    "value": "Rizoliq Soy "
+                },
+                {
+                    "name": "Mengi mavuno",
+                    "value": "Mengi mavuno"
+                },
+                {
+                    "name": "Maxiforce starter",
+                    "value": "Maxiforce starter"
+                },
+                {
+                    "name": "Maxiforce Grower",
+                    "value": "Maxiforce Grower"
+                },
+                {
+                    "name": "Maxiforce fruiter",
+                    "value": "Maxiforce fruiter"
+                },
+                {
+                    "name": "NPS Zn",
+                    "value": "NPS Zn"
+                },
+                {
+                    "name": "Grow -Cal",
+                    "value": "Grow -Cal"
+                },
+                {
+                    "name": "Paristar",
+                    "value": "Paristar"
+                },
+                {
+                    "name": "G - One",
+                    "value": "G - One"
+                },
+                {
+                    "name": "RTS 7:7:7",
+                    "value": "RTS 7:7:7"
+                },
+                {
+                    "name": "Tanzanite Booster Plus",
+                    "value": "Tanzanite Booster Plus"
+                },
+                {
+                    "name": "Mokusaku",
+                    "value": "Mokusaku"
+                },
+                {
+                    "name": "Soil king mbolea halisi",
+                    "value": "Soil king mbolea halisi"
+                },
+                {
+                    "name": "Saprolife",
+                    "value": "Saprolife"
+                },
+                {
+                    "name": "Vitazyme Micro Foliar",
+                    "value": "Vitazyme Micro Foliar"
+                },
+                {
+                    "name": "Fastgrow Starter",
+                    "value": "Fastgrow Starter"
+                },
+                {
+                    "name": "Fastgrow Foliar Feed",
+                    "value": "Fastgrow Foliar Feed"
+                },
+                {
+                    "name": "Ferrelene- Fe EDDHA",
+                    "value": "Ferrelene- Fe EDDHA"
+                },
+                {
+                    "name": "Elfert- F ",
+                    "value": "Elfert- F "
+                },
+                {
+                    "name": "Giant",
+                    "value": "Giant"
+                },
+                {
+                    "name": "Micronet-15",
+                    "value": "Micronet-15"
+                },
+                {
+                    "name": "Suspension 12-12-44",
+                    "value": "Suspension 12-12-44"
+                },
+                {
+                    "name": "Suspension 24-24-14",
+                    "value": "Suspension 24-24-14"
+                },
+                {
+                    "name": "Mazao Booster",
+                    "value": "Mazao Booster"
+                },
+                {
+                    "name": "Humic plus",
+                    "value": "Humic plus"
+                },
+                {
+                    "name": "Neo Supreme",
+                    "value": "Neo Supreme"
+                },
+                {
+                    "name": "Neo High P",
+                    "value": "Neo High P"
+                },
+                {
+                    "name": "Super Neo High K",
+                    "value": "Super Neo High K"
+                },
+                {
+                    "name": "Micronet -36 ",
+                    "value": "Micronet -36 "
+                },
+                {
+                    "name": "Superfeed",
+                    "value": "Superfeed"
+                },
+                {
+                    "name": "Fahari Booster",
+                    "value": "Fahari Booster"
+                }
+            ],
+            onAdd: (value) => {
+                var arr = JSON.parse(document.getElementById('fertilizer').value)
+                arr.push(value)
+                document.getElementById('fertilizer').value = JSON.stringify(arr)
+                var item = document.createElement("div")
+                item.className = "item"
+                item.innerText = value
+                fertamount.appendChild(item)
+        
+            },
+            onRemove: (value) => {
+                let arr = JSON.parse(document.getElementById('fertilizer').value)
+                arr.splice(arr.indexOf(value), 1)
+                document.getElementById('fertilizer').value = JSON.stringify(arr)
+                let removed_child;
+                
+                // remove child,
+                let active_label = document.getElementById("defaultLabelfertilizer")
+                for (let child of fertamount.children) {
+                    if (child.innerText === value) {
+                        fertamount.removeChild(child)
+                        removed_child = child
+                        break;
+                    }
+                }
+                
+                if (removed_child) {
+                    if (removed_child.innerText.trim().toString() === active_label.innerText.trim().toString()) {
+                        active_label.innerText = 'Select one'
+                    }
+                    
+                }
+
+                // also remove that element from the preview...
+                let toCleanDiv;
+                let targgedDivs = []
+                let holderDivs = document.getElementsByClassName('fertivalue-holder')
+                for (let div of holderDivs) {
+                    divs = Object.values(div.children).filter(value => value.className === 'fertilizer-name fst-italici')
+                    targgedDivs = [...targgedDivs, ...divs]
+                }
+                console.log(targgedDivs)
+                // targettespans = holderDivs.children.filter(value => value.className === 'fertilizer-name fst-italici')
+
+                for (let target of targgedDivs) {
+                    // HII LOGIC FOR FUTURE IANGALIE NAHISI HAIJAKAA SAWA, KOZ ANAWEZA AKADELETE BUT HUKU KWENYE PREVIEW IKAENDELEA KUWEPO
+                    // value clicked(deleted) and 
+                    if (target.innerText.trim().toString() === value.trim().toString()) {
+                        target.parentNode.parentNode.removeChild(target.parentNode)
+                    }
+                }
+                
+            }
+        })
+
+    </script>
+
+    <script>
+        // executing Fertilizer add weight logics...
+        let label = document.getElementById("defaultLabelfertilizer")
+        let seed_label = document.getElementById("defaultLabelseed")
+        let yield_label = document.getElementById("defaultLabelyield")
+        
+        let seedInput = document.getElementById('idadiyambegu')
+        let yieldInput = document.getElementById('estimatedoutput')
+        let fertiInput = document.getElementById("uzito")
+
+        let ferterrcont = document.getElementById("fertamounterror")
+        let seederrcont = document.getElementById("seedamounterror")
+        let yielderrcont = document.getElementById("yieldamounterr")
+
+        let yieldbtn = document.getElementById("addyield")
+        let fertaddbtn = document.getElementById("addamountfert")
+        let seedaddbtn = document.getElementById("addamountseed")
+
+        let previewferti = document.getElementById("previewfertivalue")
+        let previewseed = document.getElementById("previewseedvalue")
+        let previewyield = document.getElementById("previewoutput")
+
+        let seedunit = document.getElementById('unitKg')
+        console.log('seed unit ', seedunit)
+
+        let errorMessage;
+        
+        
+        function displayError(errorMessage, errorContainer, input) {
+            errorContainer.innerText = errorMessage
+            errorContainer.style.display = 'block'
+            input.value = ""
+            
+            setTimeout(() => {
+                errorContainer.style.display = "none"
+            }, 3000)
+        }
+
+        function addtoPreviewYield(label, valueinput, previewContainer) {
+            spans = document.getElementsByClassName("yield-crop-name")
+
+            for (let span of spans) {
+                if (span.innerText.trim().toString() === label.innerText.trim().toString()) {
+                    span.nextSibling.innerText = `${(parseInt(valueinput.value.trim()) * 120).toString()}KG`
+                    valueinput.value = ""
+                    return;
+                }
+            }
+
+            let holderDiv = document.createElement('div')
+            holderDiv.className = "mx-2 yieldvalue-holder"
+            holderDiv.style.display = 'flex'
+            holderDiv.style.alignItems = 'center'
+
+            let titleSpan = document.createElement('span')
+            titleSpan.className = "yield-crop-name fst-italici"
+            titleSpan.innerText = `${label.innerText}`
+
+            let valueSpan = document.createElement('span')
+            valueSpan.className = "yield-number text-success text-uppercase"
+            valueSpan.style.fontWeight = 'bold'
+            valueSpan.style.marginLeft = '10px'
+            valueSpan.innerText = `${(parseInt(valueinput.value.trim()) * 120).toString()}KG`
+
+            let deleteimg = document.createElement('img')
+            deleteimg.className = 'mx-2'
+            deleteimg.style.cursor = 'pointer'
+            deleteimg.src = "{% static 'argonomist/images/x-mark.png' %}"
+            deleteimg.style.width = "14px"
+            deleteimg.addEventListener('click', (e) => {
+                e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+            })
+
+            holderDiv.appendChild(titleSpan)
+            holderDiv.appendChild(valueSpan)
+            holderDiv.appendChild(deleteimg)
+
+            previewContainer.appendChild(holderDiv)
+            valueinput.value = ""
+        }
+
+        function addtoPreviewSeed(label, valueinput, previewContainer) {
+            spans = document.getElementsByClassName('seed-name')
+        
+            for (let span of spans) {
+                if (span.innerText.trim().toString() === label.innerText.trim().toString()){
+                    span.nextSibling.innerText = seedunit.checked ? `${valueinput.value.trim()}KG` : `${valueinput.value.trim()}`;
+                    valueinput.value = ""
+                    return;
+                }
+            }
+
+            let holderDiv = document.createElement('div')
+            holderDiv.className = "mx-2 seedvalue-holder"
+            holderDiv.style.display = 'flex'
+            holderDiv.style.alignItems = 'center'
+            let titleSpan = document.createElement('span')
+            titleSpan.className = "seed-name fst-italici"
+            titleSpan.innerText = `${label.innerText}`
+            // i don't need KG..
+            let idadiSpan = document.createElement('span')
+            idadiSpan.className = "seed-number text-success text-uppercase"
+            idadiSpan.style.fontWeight = 'bold'
+            idadiSpan.style.marginLeft = '10px'
+            idadiSpan.innerText = seedunit.checked ?  `${valueinput.value.trim()}KG` : `${valueinput.value.trim()}`
+
+            let deleteimg = document.createElement('img')
+            deleteimg.className = 'mx-2'
+            deleteimg.style.cursor = 'pointer'
+            deleteimg.src = "{% static 'argonomist/images/x-mark.png' %}"
+            deleteimg.style.width = "14px"
+            deleteimg.addEventListener('click', (e) => {
+                e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+            })
+            holderDiv.appendChild(titleSpan)
+            holderDiv.appendChild(idadiSpan)
+            holderDiv.appendChild(deleteimg)
+
+            previewContainer.appendChild(holderDiv)
+            valueinput.value = ""
+        }
+        
+        function addtoPreview(label, valueinput, previewContainer) {
+
+            // first detect the label if its "Select one" igonore,
+            // then go to check the value if there is no any value just igonore
+            // if the value is not integer just give display error text...
+            spans = document.getElementsByClassName('fertilizer-name')
+
+            for (let span of spans) {
+                if (span.innerText.trim().toString() === label.innerText.trim().toString()) {
+                    console.log('span ', span)
+                    span.nextSibling.innerText = `${valueinput.value.trim()}KG` 
+                    valueinput.value = ""
+                    return;
+                }
+            }
+
+
+            let holderDiv = document.createElement('div')
+            holderDiv.className ="mx-2 fertivalue-holder"
+            holderDiv.style.display = 'flex';
+            holderDiv.style.alignItems = 'center';
+            let titleSpan = document.createElement('span')
+            titleSpan.className = "fertilizer-name fst-italici"
+            titleSpan.innerText = `${label.innerText}`
+            let weightSpan = document.createElement('span')
+            weightSpan.className = "fertilizer-weight text-success text-uppercase"
+            weightSpan.style.fontWeight = 'bold'
+            weightSpan.style.marginLeft = '10px'
+            weightSpan.innerText = `${valueinput.value.trim()}KG`
+            let deleteimg = document.createElement('img')
+            deleteimg.className="mx-2"
+            deleteimg.style.cursor = "pointer"
+            deleteimg.src = "{% static 'argonomist/images/x-mark.png' %}"
+            deleteimg.style.width = "14px"
+            deleteimg.addEventListener('click', (e) => {
+                e.target.parentNode.parentNode.removeChild(e.target.parentNode)
+            })
+            holderDiv.appendChild(titleSpan)
+            holderDiv.appendChild(weightSpan)
+            holderDiv.appendChild(deleteimg)
+
+            previewContainer.appendChild(holderDiv)
+
+            // then clear the 'input'
+            valueinput.value = ""
+        }
+
+
+        seedaddbtn.addEventListener('click', () => {
+            if (seedInput.value.trim().length < 1) {
+                errorMessage = "Error, Please enter something to add"
+                displayError(errorMessage, seederrcont, seedInput)
+                return;
+            }
+            if (isNaN(Number(yieldInput.value.trim()))) {
+                errorMessage = "Error, please enter number only"
+                displayError(errorMessage, seederrcont, seedInput)
+                return
+            }
+
+            if (seed_label.innerText === "Select one") {
+                // then we've an error here..
+                errorMessage = "Amount submitted should have crop, click dropdown to select one"   
+                displayError(errorMessage, seederrcont, seedInput)
+                return
+            }
+
+            addtoPreviewSeed(seed_label, seedInput, previewseed)
+        })
+
+        yieldbtn.addEventListener('click', () => {
+            if (yieldInput.value.trim().length < 1) {
+                errorMessage = "Error, Please enter something to add"
+                displayError(errorMessage, yielderrcont, yieldInput)
+                return;
+            }
+            if (isNaN(Number(yieldInput.value.trim()))) {
+                errorMessage = "Error, please enter number only"
+                displayError(errorMessage, yielderrcont, yieldInput)
+                return
+            }
+
+            if (yield_label.innerText === "Select one") {
+                // then we've an error here..
+                errorMessage = "Amount submitted should have crop, click dropdown to select one"   
+                displayError(errorMessage, yielderrcont, yieldInput)
+                return
+            }
+
+            addtoPreviewYield(yield_label, yieldInput, previewyield)
+        })
+
+        fertaddbtn.addEventListener('click', () => {
+            if (fertiInput.value.trim().length < 1) {
+                errorMessage = "Error, Please enter something to add"
+                displayError(errorMessage, ferterrcont, fertiInput)
+                return;
+            }
+            if (isNaN(Number(fertiInput.value.trim()))) {
+                errorMessage = "Error, please enter number only"
+                displayError(errorMessage, ferterrcont, fertiInput)
+                return
+            }
+
+            if (label.innerText === "Select one") {
+                // then we've an error here..
+                errorMessage = "Amount submitted should have fertilizer, click dropdown to select one"   
+                displayError(errorMessage, ferterrcont, fertiInput)
+                return
+            }
+
+            // we're good to go...
+            // at first you should make sure if the fertilizer name found in its found you should update
+            // instead of create a new one..
+            addtoPreview(label, fertiInput, previewferti)
+            
+
+        }) 
+    </script>
+
+    <script>
+        $('#fertilizeramount')
+            .dropdown({
+                
+                onChange: value => {
+                    console.log('value ', value)
+                }
+            });
+
+            $('#seedamount')
+            .dropdown({
+              
+                onChange: value => {
+                    console.log('value ', value)
+                }
+            });
+
+
+            $('#totalyield')
+            .dropdown({
+              
+                onChange: value => {
+                    console.log('value ', value)
+                }
+            });
+
+    </script>
+
+
+    <script>
+        let formElem = document.getElementById('recommendForm')
+        let frotnEndMsgPElem = document.getElementById('frontEndMessage')
+        let frontEndMsgElem = document.getElementById('frontEndMsg')
+        let previewf = document.getElementById("previewfertivalue")
+        let previews = document.getElementById("previewseedvalue")
+        let previewy = document.getElementById("previewoutput")
+        let submitbtn = document.getElementById("completebtn")
+
+        console.log('prevferti ', previewf)
+
+
+        function nionesheError(message) {
+            window.scrollTo(0,0)
+            frotnEndMsgPElem.innerText = message
+            frontEndMsgElem.style.display = "block"
+            setTimeout(() => {
+                frontEndMsgElem.style.display = "none"
+            }, 2000)
+        }
+
+
+        function compareTheseArrays(inPreview, inDropdown, code) {
+            // Law of Thumb: inDropDown length should be either the same to inPreview array length or greater in length than inPreview array
+            if (inPreview.length !== inDropdown.length || inPreview.length > inDropdown.length) {
+                let message = ''
+                if (code === "fer") {
+                    message = "Make sure you submitted the total weight of each fertilizer you picked."
+                }
+
+                if (code === "seed") {
+                    message = "Make sure you submitted the number of seed for each crop you picked."
+                }
+
+                if (code === "yield") {
+                    message = "Make sure you submitted the estimated yield amount for each crop you picked"
+                }
+
+                nionesheError(message)
+                return false;
+            }
+            else {
+                return true;
+            }
+
+            for (let data of inPreview) {
+                if (!inDropdown.includes(data)) {
+                    let message = ''
+                    if (code === "fer") {
+                        message = "You added weight to fertlizer you never picked."
+                    }
+    
+                    if (code === "seed") {
+                        message = "You added seed number to crop you never picked."
+                    }
+    
+                    if (code === "yield") {
+                        message = "You added output/yield to crop you never picked"
+                    }
+                    nionesheError(message)
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
+
+        }
+
+        function giveMeMetadataObj(target, type) {
+            let val;
+            if (target.nextSibling.innerText.includes('KG')) {
+                // type === "seed" && seedunit.checked.
+                if (type === "seed") {
+                    val = `${parseInt(target.nextSibling.innerText.substr(0, target.nextSibling.innerText.indexOf('K')))}KG`
+                    console.log('this is output val for seed ', val)
+                    // val = target.nextSibling.innerText
+                }
+                else {
+                    // val = parseInt(target.nextSibling.innerText.substr(0, target.nextSibling.innerText.indexOf('KG'))) * 1000
+                    val = parseInt(target.nextSibling.innerText.substr(0, target.nextSibling.innerText.indexOf('K')))
+                }
+            }
+            else { 
+                val = parseInt(target.nextSibling.innerText.toString())
+            }
+            console.log('something to send ', {[target.innerText.trim()]: val})
+            return  {[target.innerText.trim()]: val}
+        } 
+
+        submitbtn.addEventListener('click', e => {
+            console.log('someone clicked me!')
+            e.preventDefault()
+            e.stopPropagation()
+            // let's do our validation
+            console.log('pass1')
+            if (document.getElementById("culttype").value === "Open this select menu") {
+                nionesheError(
+                    "You should provide the cultivation type"
+                )
+                return
+            }
+
+            if (JSON.parse(document.getElementById('fertilizer').value).length < 1 ) {
+                nionesheError(
+                    "You should pick at least one fertilizer"
+                )
+                return;
+            }
+
+            if (previewf.children.length < 1) {
+                nionesheError("Add the individual amount of fertilizer, (total fertilizer weight)")
+                return;
+            }
+
+            if (JSON.parse(document.getElementById("crop").value).length < 1) {
+                nionesheError(
+                    "You should pick at least one crop"
+                )
+                return;
+            }
+
+            if (previews.children.length < 1) {
+                nionesheError("Add the individual total amount of seed")
+                return
+            }
+
+            if (previewy.children.length < 1) {
+                nionesheError("Add the individual estimated yield of crops you recommended")
+                return
+            }
+
+            // fertilizer validation
+            let fertlizerWeightAddedName = [] 
+            let fertilizermetdata = []  
+            for (let node of Object.values(previewf.children)) {
+                for (let span of Object.values(node.children)) {
+
+                    if (span.className === "fertilizer-name fst-italici") {
+                        fertilizermetdata.push(giveMeMetadataObj(span))
+                        fertlizerWeightAddedName.push(span.innerText)
+                    }
+                }
+            }
+            let selectedferts = JSON.parse(document.getElementById('fertilizer').value)
+            const fertresp = compareTheseArrays(fertlizerWeightAddedName, selectedferts, 'fer')
+
+            // i don't understand this logic, in short i don't know what happen.
+            if (!fertresp) {
+                return;
+            }
+
+            // continue down to seed amount validation..
+            // seed validation 
+
+            let seedAmountAdded = []
+            let seedamountmetadata = []
+            for (let node of Object.values(previews.children)) {
+                for (let span of Object.values(node.children)) {
+                    if (span.className === "seed-name fst-italici") {
+                        // HII GIVE METADATA OBJECT NDO INAYO-TRIM 'KG'
+                        seedamountmetadata.push(giveMeMetadataObj(span, 'seed'))
+                        seedAmountAdded.push(span.innerText)
+                    }
+                }
+            }
+
+            let selectedseeds = JSON.parse(document.getElementById("crop").value)
+            const seedresp = compareTheseArrays(seedAmountAdded, selectedseeds, 'seed')
+
+            if (!seedresp) {
+                return;
+            }
+
+            // end of seed validation
+
+            // yield validation
+            let yieldamountAdded = []
+            let yieldmetadata = []
+            for (let node of Object.values(previewy.children)) {
+                for (let span of Object.values(node.children)) {
+                    if (span.className === "yield-crop-name fst-italici") {
+                        
+                        const metadata = giveMeMetadataObj(span)
+                        yieldmetadata.push(metadata)
+                        yieldamountAdded.push(span.innerText)
+                    }
+                }
+            }
+
+            let selectedcropstoyield = JSON.parse(document.getElementById("crop").value)
+            const yieldresp = compareTheseArrays(yieldamountAdded, selectedcropstoyield, 'yield')
+            if (!yieldresp) {
+                return;
+            }
+
+            // end of yield validation..
+            console.log('Now everything is good..')
+           
+            console.log(fertilizermetdata, seedamountmetadata, yieldmetadata)
+            document.getElementById("seed").value = JSON.stringify(seedamountmetadata)
+            document.getElementById("output").value = JSON.stringify(yieldmetadata)
+            document.getElementById("fweight").value = JSON.stringify(fertilizermetdata)
+
+            console.log('seed amout metdata ', seedamountmetadata)
+            // after that submit the form...
+            document.getElementById("recommendForm").submit()
+        })
+    </script>
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src={% static "mkulima/js/darkpan/lib/chart/chart.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/easing/easing.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/waypoints/waypoints.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/owlcarousel/owl.carousel.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/tempusdominus/js/moment.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/tempusdominus/js/moment-timezone.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js" %}></script>
+
+   
+
+    <!-- Template Javascript -->
+    <script src={% static "mkulima/js/darkpan/main.js" %}></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,680 @@
+{% extends 'mkulima/base.html' %}
+{% load static %}
+{% load filters %}
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block items %}
+<a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+        </div>
+    </div>
+    <a href='' class="nav-item nav-link text-nowrap active"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms & Production</a>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href="" class="dropdown-item">Soil</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+        </div>
+    </div>
+{% comment %} 
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item">Edit Profile</a>
+            <a href="" class="dropdown-item">Change Password</a>
+            <a href="" class="dropdown-item">Logs & Actions</a>
+        </div>
+    </div> {% endcomment %}
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="col-12" style="margin-bottom: 15px">
+        <div style="background-color: #fff" class="rounded h-100 p-4">
+            <div class="d-flex" style="justify-content: space-between">
+                <h6 style="color: #6c7293;" class="mb-4 fst-italici" style="font-weight: bold">TEST AND RECOMMENDATIONS</h6>
+                <form method="POST" id="deletegatherman">
+                    {% csrf_token %}
+                    <input type="hidden" name="profileids" id="idsinput" />
+                    {% comment %} <a href="" id="submitlink" class="text-success fst-italici">Delete selected</a> {% endcomment %}
+                </form>
+            </div>
+            <input type="hidden" id="isPreviewed" value="false" />
+
+            {% if reports.count > 0 %}
+            <table class="table" id="tableView">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-start">Farm Owner</th>
+                        <th scope="col" class="text-start">Argonomist</th>
+                        <th scope="col" class="text-start">Farm Location</th>
+                        <th scope="col" class="text-center">Is Assessed</th>
+                        <th scope="col" class="text-center">Tested at</th>
+                        <th scope="col" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        {% comment %} <td class='text-uppercase text-success' style="font-weight: bold; display:flex; align-items: center"> {% endcomment %}
+                            {% comment %} <input class="form-check-input" type="checkbox"> {% endcomment %}
+                            <!-- this is how to avoid title to display something/id/value when cursor hover on it, 
+                            https://stackoverflow.com/questions/8078388/hiding-title-tags-on-hover  so hapa kitu 
+                            kinachotakiwa ni kuwa na "title" tags mbili.. -->
+                            {% comment %} <span title="" title="{{report.id}}" style="cursor: pointer;" class="text-uppercase"><a class="text-success" href={% url 'editreport' rid=report.id %}> {{report.argonomist.first_name}} {{report.argonomist.last_name}}</a></span> {% endcomment %}
+                        {% comment %} </td> {% endcomment %}
+                        {% comment %} <td class="text-center  text-success">
+                            <span title="" title="{{report.farm.farm_metadata.id}}" style="cursor: pointer; font-weight: bold" class="text-uppercase">
+                                <a class="text-success" href="">
+                                    {{report.farm.farm_metadata.owner.full_name}}
+                                </a>
+                            </span>
+                        </td> {% endcomment %}
+                        <td>
+                            <a href={% url 'viewfarmerinfo' fid=report.farm.farm_metadata.owner.id %}>
+                                <span data_farmer_id="{{report.farm.farm_metadata.owner.id}}" style="font-weight: bold; cursor: pointer;" data_farm_id="{{report.farm.id}}" class="text-uppercase text-success popUpFarmerBio">
+                                    {{report.farm.farm_metadata.owner.full_name}}
+                                </span>
+                            </a>
+                        </td>
+                        <td class="text-uppercase">
+                            <a href={% url 'viewargoprofile' aid=report.argonomist.id %} class="popUpArgoBio-parent">
+                                <span title=""  style="font-weight: bold; cursor: pointer;" class="text-uppercase text-success popUpArgoBio" 
+                                 data_argo_id ="{{report.argonomist.id}}" >
+                                    {{report.argonomist.first_name}} {{report.argonomist.last_name}}
+                                </span>
+                            </a>
+                        </td>
+
+                        <td class="text-start text-uppercase">{{report.farm.region}}, {{report.farm.district}}</td>
+                        <td class="text-center"> 
+                        {% if report.is_completed_and_recommended %} True {% else %} False {% endif %}
+                        <td class="text-center fst-italici">{{report.added_on | formatdatetime }}</td>
+                        <td class="text-center"><a class="btn btn-sm btn-success" href={% url 'editreport' rid=report.id %}>View</a></td>
+                        
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No reports found here</p>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+
+{% comment %} <script src={% static 'administrator/js/delete_gathers.js' %}> {% endcomment %}
+</script>
+{% endblock content %}
+
+{% block datatablelogic %}
+        <script>
+            $(document).ready(function() {
+                $('#tableView').DataTable( {
+                    "aLengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+                    dom: 'Bfrtip', 
+                    buttons: [{
+                        extend: 'csv',
+                        className: 'btn btn-default',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'excel',
+                        className: 'btn btn-default',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'pdf',
+                        className: 'btn btn-default',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        className: 'btn btn-default',
+                        exportOptions: {
+                            columns: 'th:not(:last-child)'
+                        }
+                    }
+                    ],
+                } );
+            } );
+          
+        </script>
+{% endblock datatablelogic %}
+
+
+{% block myscript %}
+    <script>
+        // fetch the farmer data... 
+        let farmerspans = document.getElementsByClassName("popUpFarmerBio")
+        var isPreviewStillHoverred = false
+
+        function fetchFarmerDetails(id) {
+            var domain = "http://147.182.138.184"
+
+            return fetch(`${domain}/api/farmerbio/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{csrf_token}}'
+                },
+                body: JSON.stringify({id:id})
+            }).then(response => response.json())
+        }
+
+        function removeFarmerLoader() {
+            let loaders = document.getElementsByClassName("farmerloader")
+            for (let i=0; i < loaders.length; i++) {
+                if (loaders[i]) {
+                    loaders[i].remove()
+                }
+            }
+        }
+
+
+        for (let i=0; i < farmerspans.length; i++) {
+            farmerspans[i].id = `farmerspanhandler${i}`
+
+            farmerspans[i].addEventListener('mouseover', (e) => {
+                // display loading  
+                img = document.createElement("img")
+                img.src = "{% static 'mkulima/images/loader.gif' %}"
+                img.style.width = "20px"
+                img.className = "farmerloader"
+                e.target.appendChild(img)
+
+                // then we try to fetch in our api.. https://stackoverflow.com/questions/1735230/can-i-add-a-custom-attribute-to-an-html-tag
+                farmer_id = e.target.getAttribute('data_farmer_id')
+                
+                fetchFarmerDetails(farmer_id)
+                    .then(data => { 
+                        console.log('data ', data)
+                        data = data
+                            // if there is element which is previewed then don't create a new preview
+                            if (isPreviewStillHoverred) {
+                                return
+                            }
+                            
+                            bioDiv = document.createElement("div")
+                            metadatabase = document.createElement("div")
+
+                            profileimg = document.createElement('img')
+                            profileimg.src = `http://147.182.138.184${data.profile_pic}`
+                            profileimg.style.width = "100px"
+                            profileimg.style.height = "100px"
+                            profileimg.style.borderRadius = "50%"
+
+                            // Argonomist name div...
+                            metadataDiv1 = document.createElement('div')
+                            metadataDiv1.style.fontWeight = "bold"
+                            metadataDiv1.style.className = "mb-2"
+                            labelspan = document.createElement('span')
+                            labelspan.innerText = "Name:"
+                            valuespan = document.createElement('span')
+                            valuespan.className = "text-uppercase mx-2"
+                            valuespan.innerText = `${data.full_name}`
+                            metadataDiv1.appendChild(labelspan)
+                            metadataDiv1.appendChild(valuespan)
+
+                            // argonomist location 
+                            metadataDiv3 = document.createElement('div')
+                            metadataDiv3.style.fontWeight = "bold"
+                            metadataDiv3.style.className = "mb-2"
+                            labelspan3 = document.createElement('span')
+                            labelspan3.innerText = "Location:"
+
+                            valuespan3 = document.createElement('span')
+                            valuespan3.className = "text-uppercase mx-2"
+                            valuespan3.innerText = `${data.location}`
+                            metadataDiv3.appendChild(labelspan3)
+                            metadataDiv3.appendChild(valuespan3)
+
+                            // argonomist phone number 
+                            metadataDiv2 = document.createElement('div')
+                            metadataDiv2.style.fontWeight = "bold"
+                            metadataDiv2.style.className = "mb-2"
+                            labelspan2 = document.createElement('span')
+                            labelspan2.innerText = "Phone:"
+                            valuespan2 = document.createElement('span')
+                            valuespan2.className = "text-uppercase mx-2"
+                            valuespan2.innerText = `${data.phone}`
+                            metadataDiv2.appendChild(labelspan2)
+                            metadataDiv2.appendChild(valuespan2)
+
+                            // argonomist number of records 
+                            metadataDiv4 = document.createElement('div')
+                            metadataDiv4.style.fontWeight = "bold"
+                            metadataDiv4.style.className = "mb-2"
+                            labelspan4 = document.createElement('span')
+                            labelspan4.innerText = "Total Farms:"
+                            valuespan4 = document.createElement('span')
+                            valuespan4.className = "text-uppercase mx-2"
+                            valuespan4.innerText = `${data.noOfFarms}`
+                            metadataDiv4.appendChild(labelspan4)
+                            metadataDiv4.appendChild(valuespan4)
+
+                            // append them in metadata base 
+                            metadatabase.appendChild(metadataDiv1)
+                            metadatabase.appendChild(metadataDiv3)
+                            metadatabase.appendChild(metadataDiv2)
+                            metadatabase.appendChild(metadataDiv4)
+                            metadatabase.className = "mx-2"
+                            
+                            
+                            bioDiv.style.display="flex"
+                            bioDiv.style.alignItems = "center"
+                            bioDiv.style.justifyContent = "start"
+                            bioDiv.appendChild(profileimg)
+                            // lets add them in biod div...
+                            bioDiv.appendChild(metadatabase)
+
+
+                            previewElem = document.createElement("div")
+                            // previewElem.style.zIndex = 8
+                            previewElem.style.width = "350px"
+                            previewElem.style.height = "150px"
+                            previewElem.style.border = "2px solid grey"
+                            previewElem.style.background = "#fff"
+                            previewElem.className = "farmerpreview"
+
+                            previewElem.style.display = "flex"
+                            previewElem.style.justifyContent = "center"
+                            previewElem.style.alignItems = "center"
+                            
+                            // append them in previewElem 
+                            previewElem.appendChild(bioDiv)
+
+                            distancebetweenbottomofviewedwindowtobottomofelement = window.innerHeight - e.target.getBoundingClientRect().bottom
+
+                            // execute logic to display that previewdiv
+
+                            if (parseInt(distancebetweenbottomofviewedwindowtobottomofelement) > 300) {
+                                dimensions = e.target.getBoundingClientRect()
+                                previewElem.style.position = "absolute"
+                                previewElem.style.top = (dimensions.bottom + window.scrollY) + "px"
+                                previewElem.style.left = (dimensions.left + dimensions.left/4) + "px"
+                                
+                                /*
+                                previewElem.addEventListener('mouseover', (e) => {
+                                    previewElem.style.display = "flex"
+                                    previewElem.style.justifyContent = "center"
+                                    previewElem.style.alignItems = "center"
+                                    isPreviewStillHoverred = true
+                            
+                                    // remove if there is loading..
+                                    removeLoader()
+                                })
+                            
+                                previewElem.addEventListener('mouseout', (e) => {
+                                    previewElem.style.display = "flex"
+                                    previewElem.style.justifyContent = "center"
+                                    previewElem.style.alignItems = "center"
+                                    // labda ni muhimu kuwa na delay before making it disappear
+                                    setTimeout(() => {
+                                        isPreviewStillHoverred = false
+                            
+                                        // kwanini tusi-remove that element hapahapa...
+                                        previewElem.remove()
+                                    }, 50)
+                            
+                                    // remove if there is loaders
+                                    removeLoader()
+                                })
+                                */
+                                document.body.appendChild(previewElem)
+                            
+                            }
+                            
+                            
+                            else {
+                                dimensions = e.target.getBoundingClientRect()
+                                previewElem.style.position = "absolute"
+                                previewElem.style.top = (dimensions.top + window.scrollY - 150) + "px"
+                                previewElem.style.left = (dimensions.left + dimensions.left/4) + "px"
+                                
+                                /*
+                                previewElem.addEventListener('mouseover', (e) => {
+                                    previewElem.style.display = "flex"
+                                    previewElem.style.justifyContent = "center"
+                                    previewElem.style.alignItems = "center"
+                                    isPreviewStillHoverred = true
+                            
+                                    // remove if there is loader 
+                                    removeLoader()
+                                })
+                            
+                                previewElem.addEventListener('mouseout', (e) => {
+                                    previewElem.style.display = "none"
+                                    setTimeout(() => {
+                                        isPreviewStillHoverred = false
+                                        previewElem.remove()
+                                    }, 50)
+                            
+                                    // remove if there is loader
+                                    removeLoader()
+                                })
+                                */
+                                document.body.appendChild(previewElem)
+                            }
+                            
+                            
+
+                        }
+                    )
+                
+            })
+        }
+
+
+        for (let i=0; i < farmerspans.length; i++) {
+            farmerspans[i].addEventListener('mouseout', function removePopup(e) {
+                // remove if  there is loaders
+                removeFarmerLoader()
+
+                previews = document.getElementsByClassName("farmerpreview")
+                for (let j=0; j < previews.length; j++) {
+                    
+                    setTimeout(() => {
+                        if (!isPreviewStillHoverred) {
+                                if (previews[j]) {
+                                    previews[j].remove()
+                                }
+                                else {
+                                    removePopup(e)
+                                }
+                        }
+                    }, 30)
+                    
+                }
+            })
+        }
+    </script> 
+
+    <script>
+        let argospans = document.getElementsByClassName("popUpArgoBio")
+        // var isPreviewStillHoverred = document.getElementById("isPreviewed").value === "true"
+
+        function fetchData(id) {
+            const domain = "http://147.182.138.184"
+            console.log('im trying to fetch somedata')
+            // if (isPreviewStillHoverred) {
+                // then fetch for that id...
+                // remember preview still hoverred is changed by the 'popup' window so if there 
+                // is no any popup window linked then this will remain 'false everytime' and no need
+                // 
+                /*
+                    Everytime you send the POST in your django project template using Javascript you
+                    should also send the 'CSRFToken' otherwise it will refuse, this is security enforced
+                    in django everytime you send the post or form data using POST method... but remember in
+                    form when we want to send it we put {% csrf_token %} tag and if you inspected the page 
+                    you will see csrf_token is always available in our template, and to print it or display it
+                    you can use {{csrf_token}} this token is available in every page/template powered by django...
+                    so make sure on sendin' post using javascript you have "X-CSRFToken" header...
+                    you should send your credit to this article of stackoverflow...
+                    https://stackoverflow.com/questions/26639169/csrf-failed-csrf-token-missing-or-incorrect
+                */
+                return fetch(`${domain}/api/argodetails/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{csrf_token}}'
+                    },
+                    body: JSON.stringify({id:id})
+                }
+                ).then(response => response.json())
+                    // .then(data => data)
+                    // .catch(err => console.log('error ', err))    
+            // }
+        }
+
+        function removeLoader() {
+            let loaders = document.getElementsByClassName("imgloader")
+            for (let i=0; i < loaders.length; i++) {
+                if (loaders[i]) {
+                    loaders[i].remove()
+                }
+            }
+        }
+
+        for (let i=0; i < argospans.length; i++) {
+
+            argospans[i].id = `spanhandler${i}`
+
+            argospans[i].addEventListener('mouseover', (e) => {
+
+                img = document.createElement("img")
+                img.src = "{% static 'mkulima/images/loader.gif' %}"
+                img.style.width = "20px"
+                img.className = "imgloader"
+                e.target.appendChild(img)
+
+                argo_id = e.target.getAttribute('data_argo_id')
+                
+                fetchData(argo_id)
+                    .then(data => { 
+                        data = data
+                            if (document.getElementById("isPreviewed").value === "true") {
+                                return
+                            }
+                            
+                            bioDiv = document.createElement("div")
+                            metadatabase = document.createElement("div")
+
+                            profileimg = document.createElement('img')
+                            profileimg.src = `http://147.182.138.184${data.profile}`
+                            profileimg.style.width = "100px"
+                            profileimg.style.height = "100px"
+                            profileimg.style.borderRadius = "50%"
+
+                            // Argonomist name div...
+                            metadataDiv1 = document.createElement('div')
+                            metadataDiv1.style.fontWeight = "bold"
+                            metadataDiv1.style.className = "mb-2"
+                            labelspan = document.createElement('span')
+                            labelspan.innerText = "Name:"
+                            valuespan = document.createElement('span')
+                            valuespan.className = "text-uppercase mx-2"
+                            valuespan.innerText = `${data.full_name}`
+                            metadataDiv1.appendChild(labelspan)
+                            metadataDiv1.appendChild(valuespan)
+
+                            // argonomist location 
+                            metadataDiv3 = document.createElement('div')
+                            metadataDiv3.style.fontWeight = "bold"
+                            metadataDiv3.style.className = "mb-2"
+                            labelspan3 = document.createElement('span')
+                            labelspan3.innerText = "Location:"
+
+                            valuespan3 = document.createElement('span')
+                            valuespan3.className = "text-uppercase mx-2"
+                            valuespan3.innerText = `${data.location}`
+                            metadataDiv3.appendChild(labelspan3)
+                            metadataDiv3.appendChild(valuespan3)
+
+                            // argonomist phone number 
+                            metadataDiv2 = document.createElement('div')
+                            metadataDiv2.style.fontWeight = "bold"
+                            metadataDiv2.style.className = "mb-2"
+                            labelspan2 = document.createElement('span')
+                            labelspan2.innerText = "Phone:"
+                            valuespan2 = document.createElement('span')
+                            valuespan2.className = "text-uppercase mx-2"
+                            valuespan2.innerText = `${data.phone}`
+                            metadataDiv2.appendChild(labelspan2)
+                            metadataDiv2.appendChild(valuespan2)
+
+                            // argonomist number of records 
+                            metadataDiv4 = document.createElement('div')
+                            metadataDiv4.style.fontWeight = "bold"
+                            metadataDiv4.style.className = "mb-2"
+                            labelspan4 = document.createElement('span')
+                            labelspan4.innerText = "Completed Task:"
+                            valuespan4 = document.createElement('span')
+                            valuespan4.className = "text-uppercase mx-2"
+                            valuespan4.innerText = `${data.tasks}`
+                            metadataDiv4.appendChild(labelspan4)
+                            metadataDiv4.appendChild(valuespan4)
+
+                            // append them in metadata base 
+                            metadatabase.appendChild(metadataDiv1)
+                            metadatabase.appendChild(metadataDiv3)
+                            metadatabase.appendChild(metadataDiv2)
+                            metadatabase.appendChild(metadataDiv4)
+                            metadatabase.className = "mx-2"
+                            
+                            
+                            bioDiv.style.display="flex"
+                            bioDiv.style.alignItems = "center"
+                            bioDiv.style.justifyContent = "start"
+                            bioDiv.appendChild(profileimg)
+                            // lets add them in biod div...
+                            bioDiv.appendChild(metadatabase)
+
+
+                            previewElem = document.createElement("div")
+                            previewElem.style.width = "350px"
+                            previewElem.style.height = "150px"
+                            previewElem.style.border = "2px solid grey"
+                            previewElem.style.background = "#fff"
+                            previewElem.className = "preview"
+                            
+                            previewElem.style.display = "flex"
+                            previewElem.style.justifyContent = "center"
+                            previewElem.style.alignItems = "center"
+                            
+                            previewElem.appendChild(bioDiv)
+
+
+                            distancebetweenbottomofviewedwindowtobottomofelement = window.innerHeight - e.target.getBoundingClientRect().bottom
+
+
+
+                            if (parseInt(distancebetweenbottomofviewedwindowtobottomofelement) > 300) {
+                                dimensions = e.target.getBoundingClientRect()
+                                previewElem.style.position = "absolute"
+                                previewElem.style.top = (dimensions.bottom + window.scrollY) + "px"
+                                previewElem.style.left = (dimensions.left - dimensions.left/4) + "px"
+                            
+                                previewElem.addEventListener('mouseover', (e) => {
+                                    previewElem.style.display = "flex"
+                                    previewElem.style.justifyContent = "center"
+                                    previewElem.style.alignItems = "center"
+                                    removeLoader()
+
+                                })
+                            
+                                previewElem.addEventListener('mouseout', (e) => {
+                                    previewElem.style.display = "flex"
+                                    previewElem.style.justifyContent = "center"
+                                    previewElem.style.alignItems = "center"
+                                    setTimeout(() => {
+                                        
+                                        previewElem.remove()
+                                    }, 50)
+                            
+                                    removeLoader()
+                                })
+                                document.body.appendChild(previewElem)
+
+                            }
+                            
+                            else {
+                                dimensions = e.target.getBoundingClientRect()
+                                previewElem.style.position = "absolute"
+                                previewElem.style.top = (dimensions.top + window.scrollY - 150) + "px"
+                                previewElem.style.left = (dimensions.left - dimensions.left/4) + "px"
+                            
+                                previewElem.addEventListener('mouseover', (e) => {
+                                    previewElem.style.display = "flex"
+                                    previewElem.style.justifyContent = "center"
+                                    previewElem.style.alignItems = "center"
+
+                                    removeLoader()
+                                })
+                            
+                                previewElem.addEventListener('mouseout', (e) => {
+                                    previewElem.style.display = "none"
+                                    setTimeout(() => {
+
+                                        previewElem.remove()
+                                    }, 50)
+                            
+                                    removeLoader()
+                                })
+                            
+                                document.body.appendChild(previewElem)
+                            }
+                            
+                            
+
+                        }
+                    )
+                
+            })
+        }
+
+        
+
+
+        
+        for (let i=0; i < argospans.length; i++) {
+            argospans[i].addEventListener('mouseout', function removePopup(e) {
+                // remove if  there is loaders
+                removeLoader()
+                
+                previews = document.getElementsByClassName("preview")
+                for (let j=0; j < previews.length; j++) {
+                    let isPreviewStillHoverred = document.getElementById("isPreviewed").value === "true"
+                    setTimeout(() => {
+                        if (!isPreviewStillHoverred) {
+                                if (previews[j]) {
+                                    previews[j].remove()
+                                }
+                                else {
+                                    removePopup(e)
+                                }
+                        }
+                    }, 30)
+                    
+                }
+            })
+        }
+    </script>
+{% endblock myscript %}

@@ -1,0 +1,185 @@
+{% extends 'mkulima/base.html' %}
+{% load static %}
+
+{% block customscripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.3/jspdf.plugin.autotable.min.js"></script>
+{% endblock customscripts %}
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block submitbtn %}
+<button id="savereportbtn" style="display: none" class="btn btn-success">Download report</button>
+
+{% endblock submitbtn %}
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+            
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms</a>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item active">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>         
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+        </div>
+    </div>
+{% comment %} 
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item">Edit Profile</a>
+            <a href="" class="dropdown-item">Change Password</a>
+            <a href="" class="dropdown-item">Logs & Actions</a>
+        </div>
+    </div> {% endcomment %}
+{% endblock items %}
+
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="col-12" style="margin-bottom: 15px">
+        <div style="background: #fff;" class="rounded h-100 p-4">
+            <div style="display:flex; justify-content: space-between; algin-items: center">
+                <div>
+                    <h6 style="color: #6c7293;" class="mb-1 fst-italici text-uppercase" style="font-weight: bold">FARMS REPORT</h6>
+                    <div style="font-size: 13px;">
+                        <small id="selectedyear">All years</small> >
+                        <small id="selectedregion">All regions</small> > 
+                        <small id="selecteddistrict">All districts</small>
+                    </div>
+                </div>
+                <div id="filterContainer" class="d-flex" style="justify-content: end; align-items: center">
+                    <p class="fst-italici" style="font-weight: bold">Generate report by:</p>
+                    <div class="form-floating mx-3">
+                        <select style="background: #fff; border-color: #6c7293;" id="yearfilter" onChange="executeRegions()" class="form-select" id="floatingSelect"
+                            aria-label="Floating label select example">
+                            <option selected value="All">All years</option>
+                        </select>
+                        <label for="floatingSelect">Year</label>
+                    </div>
+
+                    <div class="form-floating mx-3">
+                        <select style="background: #fff; border-color: #6c7293;" id="regionfilter" onChange="executeDistricts()" class="form-select" id="floatingSelect"
+                            aria-label="Floating label select example">
+                            <option selected value="All">All regions</option>
+                        </select>
+                        <label for="floatingSelect">Region</label>
+                    </div>
+                    <div class="form-floating mx-3">
+                        <select style="background: #fff; border-color: #6c7293;" id="districtfilter" class="form-select" id="floatingSelect"
+                            aria-label="Floating label select example">
+                            <option selected value="All">All districts</option>
+                            
+                        </select>
+                        <label for="floatingSelect">District</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% comment %} the the pie chart div start here {% endcomment %}
+    <div class="col-12" style="margin-bottom: 15px">
+        <div style="background: #fff;" class="rounded h-100 p-4">
+            <div class="row">
+                <div class="col-sm-12 col-xl-6" id="piechart-component"> 
+                    <h6 style="color: #6c7293;" class="mb-1 fst-italici text-uppercase" style="padding-bottom: 0; margin-bottom: 0">Top recommended Crops</h6>
+                    {% comment %} <small class="fst-italici">**This diagram illustrate the percent of crops recommended in most of farms by percentage</small> {% endcomment %}
+                    <hr />
+                    <div style="display: flex; justify-content: center; align-items: center">
+                        <div style="height: 300px; width: 300px;">
+                            <canvas id="pie-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12 col-xl-6" id="barchart-component"> 
+                    <h6 style="color: #6c7293;" class="mb-1 fst-italici text-uppercase" style="padding-bottom: 0; margin-bottom: 0">Top Crops Production Amount</h6>
+
+                    <hr />
+                    <canvas id="bar-chart"></canvas>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    {% comment %} pie chart pie chart div end here {% endcomment %}
+
+</div>
+{% endblock content %}
+
+
+{% block printpage %}
+<div id="btnHolder">
+    <button class="btn btn-success" id="printelem">
+        <span style="font-weight: bold">
+        <img src={% static 'mkulima/images/printing.png' %} width="20" />
+        Print</span>
+    </button>
+</div>
+{% endblock printpage %}
+
+
+
+
+{% block myscript %}
+
+    <script>
+        console.log('this is my printing script..')
+        document.getElementById("printelem").addEventListener("click", (e) => {
+            var notiDiv = document.getElementById("notificationCont")
+            var logoutDiv = document.getElementById("logoutCont")
+            var sidebartoggle = document.getElementById("ellipisContainer")
+            var btnHolder = document.getElementById("btnHolder")
+            var filterDiv = document.getElementById("filterContainer")
+            
+            notiDiv.style.display = "none"
+            logoutDiv.style.display = "none"
+            sidebartoggle.style.display = "none"
+            btnHolder.style.display = "none"
+            var parent = filterDiv.parentNode
+            
+            filterDiv.parentNode.removeChild(filterDiv)
+
+            window.print()
+            notiDiv.style.display = "block"
+            logoutDiv.style.display = "block"
+            sidebartoggle.style.display = "flex"
+            btnHolder.style.display = "block"
+            filterDiv.style.display = "flex"
+            parent.appendChild(filterDiv)
+        })
+    </script>
+
+
+
+    
+    <script src= {% static 'administrator/js/report.js' %}></script>
+{% endblock myscript %}

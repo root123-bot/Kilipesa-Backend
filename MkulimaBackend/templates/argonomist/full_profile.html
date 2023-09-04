@@ -1,0 +1,367 @@
+
+{% load static %}
+{% load filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>KiliPesa</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- jquery should be top -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+     <!-- semantic ui css -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.css"
+        integrity="sha512-KXol4x3sVoO+8ZsWPFI/r5KBVB/ssCGB5tsv2nVOKwLg33wTFP3fmnXa47FdSVIshVTgsYk/1734xSk9aFIa4A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.5.0/semantic.min.js"
+        integrity="sha512-Xo0Jh8MsOn72LGV8kU5LsclG7SUzJsWGhXbWcYs2MAmChkQzwiW/yTQwdJ8w6UA9C6EVG18GHb/TrYpYCjyAQw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Roboto:wght@500;700&display=swap" rel="stylesheet"> 
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+
+    <link href={% static "mkulima/js/darkpan/lib/owlcarousel/assets/owl.carousel.min.css" %} rel="stylesheet" />
+    <link
+      href={% static "mkulima/js/darkpan/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css" %}
+      rel="stylesheet"
+    />
+
+
+    <!-- Datatables bootstrap-->
+    <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" 
+    rel="stylesheet" />
+    <script src="https://cdn.datatables.net/buttons/2.3.5/css/buttons.bootstrap5.min.css"></script>
+    <!-- the end of dt... -->
+
+    <!-- Datatables export css, when i add these css of buttons then my buttons styles changed, you can remove it if you don't want -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css" />
+    <!-- end datatables export css-->
+
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href={% static "mkulima/css/darkpan/bootstrap.min.css" %}
+    rel="stylesheet" />
+
+    <!-- Template Stylesheet -->
+    <link href={% static "mkulima/css/darkpan/style.css" %} rel="stylesheet" />
+</head>
+
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <div id="spinner" class="show bg-dark position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+        <!-- Spinner End -->
+
+        <!-- Sidebar Start -->
+        <div class="sidebar pe-4 pb-3">
+            <nav style="background: #fff" class="navbar">
+                <a href="/" class="navbar-brand mx-4 mb-3" ><img src={% static 'mkulima/images/logo.jpeg' %} width="100" /></a>
+
+                <div class="d-flex align-items-center ms-4 mb-4">
+                    <div class="position-relative">
+                        <img class="rounded-circle" src={{photo}} alt="" style="width: 40px; height: 40px;">
+                        <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
+                    </div>
+                    <div class="ms-3">
+                        <h6 style="color: #6c7293;" class="mb-0 text-capitalize">{{fname}} {{lname}}</h6>
+                        <span>Argonomist</span>
+                    </div>
+                </div>
+                <div class="navbar-nav w-100">
+                    <a href="" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+                    
+                    <a href={%url 'argo_addtest' %} class="text-nowrap nav-item nav-link"><i class="fa fa-comments me-2"></i>Test & Recomme...</a>
+                    <a href={% url 'argontasks' %} class="text-nowrap nav-item nav-link"><i class="fa fa-th me-2"></i>My tasks</a>
+                    <a href={% url 'viewargoprofile' aid=argonomist.id %} class="nav-item nav-link"><i class="fa fa-edit me-2"></i>Edit Profile</a>
+                    <a href={% url 'forgotPassword' %} class="text-nowrap nav-item nav-link"><i class="fa fa-lock me-2"></i>Change Password</a>
+                    
+                </div>
+            </nav>
+        </div>
+        <!-- Sidebar End -->
+
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <nav style="background: #fff" class="navbar navbar-expand navbar-dark sticky-top px-4 py-0">
+                <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+                    <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+                </a>
+                <a href="#" class="sidebar-toggler flex-shrink-0">
+                    <i class="fa fa-bars text-success"></i>
+                </a>
+                <div class="navbar-nav align-items-center ms-auto">
+                    <div class="nav-item dropdown">
+                        <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item">
+                                <div class="d-flex align-items-center">
+                                    <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                                    <div class="ms-2">
+                                        <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                                        <small>15 minutes ago</small>
+                                    </div>
+                                </div>
+                            </a>
+                            <hr class="dropdown-divider">
+                            <a href="#" class="dropdown-item text-center">See all message</a>
+                        </div>
+                    </div>
+                    <div class="nav-item dropdown">
+                        
+                    </div>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img class="rounded-circle me-lg-2" src={{photo}} alt="" style="width: 40px; height: 40px;">
+                            <span style="color: #6c7293; font-weight: bold" class="d-none d-lg-inline-flex text-capitalize" onmouseover="this.style.color='#49A078'" onmouseout="this.style.color='#6c7293'">{{fname}} {{lname}}</span>
+                        </a>
+                        <div style="background: #fff" class="dropdown-menu dropdown-menu-end border-0 rounded-0 rounded-bottom m-0">
+                            
+                            <a href={% url 'logout' %} class="dropdown-item">Log Out</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <!-- Navbar End -->
+
+
+            <!-- Sale & Revenue Start -->
+            <div class="container-fluid py-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-6 col-xl-3" style="cursor: pointer;" id="mytask">
+                        <div style="background: #fff" class="rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-line fa-3x text-success"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">My Tasks</p>
+                                <h6 style="color: #6c7293;" class="mb-0">{{assignedtask}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3" style="cursor: pointer;" id="availabletask">
+                        <div style="background: #fff" class="rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-bar fa-3x text-success"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Available Tasks</p>
+                                <h6 style="color: #6c7293;" class="mb-0">{{atask}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3" style="cursor: pointer;" id="allcompleted">
+                        <div style="background: #fff" class="rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-area fa-3x text-success"></i>
+                            <div class="ms-3">
+                                <p class="mb-2">Completed Tasks</p>
+                                <h6 style="color: #6c7293;" class="mb-0">{{ctask}}</h6>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="col-sm-6 col-xl-3" style="cursor: pointer;" id="completedtoday">
+                        <div style="background: #fff" class="rounded d-flex align-items-center justify-content-between p-4">
+                            <i class="fa fa-chart-pie fa-3x text-success"></i>
+                            <div class="ms-3">
+                                <p class="mb-2 text-nowrap">Completed Today</p>
+                                <h6 style="color: #6c7293;" class="mb-0">{{ctoday}}</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Sale & Revenue End -->
+
+
+            <!-- Recent Sales Start -->
+            <div class="container-fluid py-4 px-4">
+                <div style="background: #fff" class="text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0 text-uppercase fst-italici" style="color: #6c7293;">completed tasks ({{ctask}})</h6>
+                        <a href={%url 'argo_addtest' %} class="text-success">{% if atask > 0 %}
+                            Available tasks({{atask}}) 
+                            {% else %}
+                            Available tasks(0)
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% if ctask > 0 %}
+                    <div class="table-responsive">
+                        <table id="tableView" class="table text-center align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="">
+                                    <th scope="col" class="text-start">Farmer</th>
+                                    <th scope="col" class="text-start">Farm Location</th>
+                                    <th scope="col">Farm Size (m<sup>2</sup> / ha)</th>
+                                    <th scope="col" class="text-start">Assessed at</th>
+                                    <th scope="col" class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% comment %} hizi ni full report.. {% endcomment %}
+                                {% for task in completed %}
+
+                                <tr>
+                                    <td class="text-uppercase text-start">{{task.farm.farm_metadata.owner.full_name}} <!--<a href="#" class="mx-3"><img title="Download" src={% static 'argonomist/images/pdf.png' %} width="20" /></a> --></td>
+                                    <td class="text-uppercase text-start">{{task.farm.region}}, {{task.farm.district}}</td>
+                                    {% comment %} <td class="text-uppercase mx-5 text-center">{{task.farm.size}}</td> {% endcomment %}
+                                    <td class="text-start">
+                                        <small>{{task.farm.farm_metadata.programmed_farmsize | roundmetersquare }}</small> /
+                                        <small> {% with sizeinhectras=task.farm.farm_metadata.programmed_farmsize|computeonlyhectras %} {{sizeinhectras}} {% endwith %}</small>
+                                    </td>
+                                    <td class="text-start">{{task.added_on | formatdatetime}}</td>
+                                    <td class="text-center"><a href={% url 'editreport' rid=task.id %} class="text-success" href="/"><button class="btn btn-success">View</button></a></td>
+                                </tr>
+                               {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p>No tests and recommendation you've done, explore a task needs test and recommendations. </p>
+                    {% endif %}
+                </div>
+            </div>
+            <!-- Recent Sales End -->
+        </div>
+        <!-- Content End -->
+
+
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+    <script src={% static "mkulima/js/darkpan/lib/chart/chart.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/easing/easing.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/waypoints/waypoints.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/owlcarousel/owl.carousel.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/tempusdominus/js/moment.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/tempusdominus/js/moment-timezone.min.js" %}></script>
+    <script src={% static "mkulima/js/darkpan/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js" %}></script>
+
+
+    <script>
+
+        document.getElementById("allcompleted").onclick = function () {
+            location.href = "{% url 'argo_full_profile' %}";
+        };
+
+        document.getElementById("mytask").onclick = function () {
+            location.href = "{% url 'argontasks' %}";
+        };
+
+        document.getElementById("availabletask").onclick = function () {
+            location.href = "{% url 'argo_addtest' %}";
+        };
+
+        {% comment %} document.getElementById("incompletetasks").onclick = function () {
+            location.href = "{% url 'incomplete' %}";
+        }; {% endcomment %}
+
+        document.getElementById("completedtoday").onclick = function () {
+            location.href = "{% url 'completedtoday' %}";
+        };
+    </script>
+
+    <!-- Data tables -->
+
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <!-- end added now datatables -->
+
+    <!-- Datatables bootstrap-->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.colVis.min.js"></script>
+
+
+    <!-- Template Javascript -->
+    <script src={% static "mkulima/js/darkpan/main.js" %}></script>
+
+    <script>
+        $(document).ready(function() {
+            $('#tableView').DataTable( {
+                "aLengthMenu": [[10, 25, 50, 100], [10, 25, 50, 100]],
+                dom: 'Bfrtip', 
+                buttons: [{
+                    extend: 'csv',
+                    className: 'btn btn-default',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+                {
+                    extend: 'excel',
+                    className: 'btn btn-default',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },
+                /*{
+                    extend: 'pdf',
+                    className: 'btn btn-default',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                },*/
+                {
+                    extend: 'print',
+                    className: 'btn btn-default',
+                    exportOptions: {
+                        columns: 'th:not(:last-child)'
+                    }
+                }
+                ],
+            } );
+        } );
+      
+    </script>
+
+</body>
+
+</html>

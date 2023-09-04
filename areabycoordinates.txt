@@ -1,0 +1,135 @@
+
+arr = [
+    [-6.837671,39.230168],
+    [-6.837501,39.230274],
+    [-6.837473,39.230380],
+    [-6.837418,39.230371],
+    [-6.837404,39.230561],
+    [-6.837634,39.230450],
+    [-6.837671,39.230168]
+]
+
+
+//  325...
+
+    co = {
+        'type':'Polygon','coordinates':[[
+            [-6.814634967075995, 39.29201783568889],
+            [-6.814792099377194, 39.292041975570825],
+            [-6.814761471898802, 39.29225252898548],
+            [-6.814604339587564, 39.2922297302081],
+            [-6.814634967075995, 39.29201783568889]
+        ]]
+    }
+
+
+    co6 = {
+        'type': 'Polygon', 'coordinates': [[
+            [-6.814567053947438, 39.292390662748005],
+            [-6.814642291040935, 39.292325619177234],
+            [-6.814680908305582, 39.29230818481807],
+            [-6.8148060814868465, 39.29244765969146],
+            [-6.814795428451414, 39.292455706318776],
+            [-6.814884647615838, 39.292556289160174],
+            [-6.814789436118881, 39.29264144929923],
+            [-6.814567053947438, 39.292390662748005]
+        ]]
+    }
+
+
+    co7 = {
+        'type': 'Polygon', 'coordinates': [[
+            [-6.814911946017277, 39.29308066102084],
+            [-6.815041114024519, 39.292929786758734],
+            [-6.815142983613936, 39.29301695855462],
+            [-6.815183598280815, 39.29296733768619],
+            [-6.815233534343327, 39.293010253032215],
+            [-6.815085057773047, 39.293180573310316],
+            [-6.815073738927931, 39.2931671622629],
+            [-6.815047106353783, 39.29319800766759],
+            [-6.814911946017277, 39.29308066102084]
+
+        ]]
+    }
+
+    latlng = {
+        'type': 'Polygon', 'coordinates': [[
+            [-6.814391980459953, 39.29219636442354], 
+            [-6.814529804203548, 39.29214875521195],
+            [-6.81456176332683, 39.29224196197831],
+            [-6.81437200600109, 39.29230566444453],
+            [-6.814361352956001, 39.29227146627845], 
+            [-6.814451903831609, 39.29224196197831],
+            [-6.814442582418737, 39.292217822096376],
+            [-6.814402633504355, 39.29223123314189],
+            [-6.814391980459953, 39.29219636442354]
+        ]]
+    }
+
+
+    // JENGO KUBWA..  area = 550.93m2, yetu ina-return 432.32777m2, in my js i get 482
+    latlngkubwa = {
+        "type": "Polygon", "coordinates": [[
+            [-6.814567704671967, 39.29239130724118],
+            [-6.814642941765376, 39.29232492256586],
+            [-6.814650265729579, 39.292334310297726],
+            [-6.8146815590299585, 39.29230748820668],
+            [-6.814808063840463, 39.29244696308009],
+            [-6.8147967449903595, 39.29245702136423],
+            [-6.814885298340722, 39.292556263099286],
+            [-6.814789421029159, 39.29264209379061],
+            [-6.814567704671967, 39.29239130724118]
+
+        ]]
+    }
+
+
+//
+var sum = 0;
+
+for(var i=0,l=arr.length-1;i<l;i++){
+    sum+=(arr[i][0]*arr[i+1][1]-arr[i+1][0]*arr[i][1]);
+}
+console.log('The Area of Ploygon is:'+(sum/2));
+
+// OUTPUT 
+The Area of Ploygon is:-268.2449102281545
+
+
+// to read 
+https://medium.com/@nargessmi87/how-to-calculate-distance-between-two-points-in-leaflet-js-38b9c24e4c6d
+https://stackoverflow.com/questions/43167417/calculate-distance-between-two-points-in-leaflet
+
+
+
+
+
+// distance of two points/coords; hii inaweza ikatusaidia...
+// https://stackoverflow.com/questions/43167417/calculate-distance-between-two-points-in-leaflet
+function getDistance(origin, destination) {
+    // return distance in meters
+    var lon1 = toRadian(origin[1]),
+        lat1 = toRadian(origin[0]),
+        lon2 = toRadian(destination[1]),
+        lat2 = toRadian(destination[0]);
+
+    var deltaLat = lat2 - lat1;
+    var deltaLon = lon2 - lon1;
+
+    var a = Math.pow(Math.sin(deltaLat/2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(deltaLon/2), 2);
+    var c = 2 * Math.asin(Math.sqrt(a));
+    var EARTH_RADIUS = 6371;
+    return c * EARTH_RADIUS * 1000;
+}
+function toRadian(degree) {
+    return degree*Math.PI/180;
+}
+var distance = getDistance([lat1, lng1], [lat2, lng2])
+
+
+
+            PYTHON CAN HELP US..
+// https://garyliao-13743.medium.com/calculate-the-area-of-a-polygon-in-a-map-c0ea6c74d0f4
+// https://gis.stackexchange.com/questions/413349/calculating-area-of-lat-lon-polygons-without-transformation-using-geopandas
+// https://stackoverflow.com/questions/4681737/how-to-calculate-the-area-of-a-polygon-on-the-earths-surface-using-python
+// https://stackoverflow.com/questions/4681737/how-to-calculate-the-area-of-a-polygon-on-the-earths-surface-using-python

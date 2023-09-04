@@ -1,0 +1,100 @@
+{% extends 'mkulima/base.html' %} 
+{% load static %} 
+{% load humanize %}
+{% load filters %} 
+
+{% comment %} diosod {% endcomment %}
+{% block usergroup %}
+ admin 
+{% endblock %}
+
+
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+    
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+            <i class="fa fa-users me-2"></i>
+            Users
+        </a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+            
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Test and Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms</a>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+            <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+        </div>
+    </div>
+
+{% endblock items %}
+
+{% block content %}
+<div class="container-fluid py-4 px-4">
+    <div style="background-color: #fff" class="rounded p-4">
+        {% comment %} <div class="mb-4">
+            <h6 style="color: #6c7293;" class="mb-0 text-uppercase fst-italici">NOTIFICATION CENTER</h6>
+        </div>
+        <hr style="margin-bottom: 0; padding-bottom: 0" />
+         {% endcomment %}
+        <div class="mx-3">
+            <div style="font-style: italic">
+                <div>
+                    <small>Sender: </small>
+                    {% if notification.sender.email %}
+                        <small style="font-weight: bold">Mtu fulani</small>
+                    {% else %}
+                        <small style="font-weight: bold">System</small>
+                    {% endif %}
+                </div>
+                <div>
+                    <small>Receiver: </small><small style="font-weight: bold">Me</small>
+                </div>
+                <div>
+                    <small>Date: </small><small style="font-weight: bold">{{notification.added_at}}</small>
+                </div>
+            </div>
+            <hr />
+            <div>
+                <p style="text-transform: uppercase; font-weight: bold; margin-bottom: 0; padding-bottom: 0">{{notification.subject}}</p>
+                <div>
+                    <small>{{notification.body}}</small>
+                    {% if notification.created_user %}
+                        <br />
+                        <small><a href={% if created_user_group == "Argonomist" %} 
+                                    {% url 'viewargoprofile' aid=argo_id %}
+                                {% else %}
+                                    {% url 'viewgatherprofile' gid=gather_id  %}
+                                {% endif %}
+                            style="font-weight: bold; color: #28a745" href="">Click here</a> to view the profile</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

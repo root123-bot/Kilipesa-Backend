@@ -1,0 +1,151 @@
+{% extends 'mkulima/base.html' %}
+{% load static %}
+{% load filters %}
+
+
+{% block customscripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.3/jspdf.plugin.autotable.min.js"></script>
+{% endblock customscripts %}
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block submitbtn %}
+{% comment %} <button id="savereportbtn" class="btn btn-success">Download report</button> {% endcomment %}
+
+{% endblock submitbtn %}
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+            
+
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href="" class="dropdown-item active">Soil</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+        </div>
+    </div>
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item">Edit Profile</a>
+            <a href="" class="dropdown-item">Change Password</a>
+            <a href="" class="dropdown-item">Logs & Actions</a>
+        </div>
+    </div> {% endcomment %}
+{% endblock items %}
+
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="col-12" style="margin-bottom: 15px">
+        <div style="background: #fff" class="rounded h-100 p-4">
+            <div>
+                <div>
+                    <h6 class="mb-1 fst-italici text-uppercase" style="font-weight: bold; color: #6c7293;">SOIL TEST RESULTS</h6>
+                    <div style="margin-top: 10px; margin-left: 10px">
+                        <p class="font-weight-bold" style="margin-bottom: 0; padding-bottom: 0; text-decoration: underline; font-weight:bold;">Keys</p>
+                        <div class="row" style="margin-top: 3px; padding-top: 0">
+                            <div class="col-3">
+                                <small style="display: block;"><sup>o</sup>C => Soil Temperature(<sup>o</sup>C)</small>
+                                <small style="display: block;">pH => Soil pH</small>
+                                <small style="display: block;">N => Nitrogen level(ppm)</small>
+                            </div>
+                            <div class="col-3">
+                                <small style="display: block;">PH => Phosphorus level(ppm)</small>
+                                <small style="display: block;">K => Potassium level(ppm)</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="background: #fff" class="mt-3 rounded h-100 p-4">
+            {% if idadi > 0 %}
+            <table class="table" id="tableView">
+                <!-- to know the number of farms we'll track the national id if exist if not then track 'name' -->
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-start text-nowrap">Argonomist</th>
+                        <th scope="col" class="text-start text-nowrap">Farm Owner</th>
+                        <th scope="col" class="text-start text-nowrap">Farm Location</th>
+                        <th scope="col" class="text-start text-nowrap">Color</th>
+                        <th scope="col" class="text-start text-nowrap"><sup>o</sup>C</th>
+                        <th scope="col" class="text-start text-nowrap">Structure</th>
+                        <th scope="col" class="text-start text-nowrap">Texture</th>
+                        <th scope="col" class="text-start text-nowrap">Porosity</th>
+                        <th scope="col" class="text-start text-nowrap">pH</th>
+                        {% comment %} <th scope="col" class="text-start text-nowrap">Form</th> {% endcomment %}
+                        {% comment %} <th scope="col" class="text-start text-nowrap">Density</th> {% endcomment %}
+                        {% comment %} <th scope="col" class="text-start text-nowrap">Moisture</th> {% endcomment %}
+                        {% comment %} <th scope="col" class="text-start text-nowrap">PH</th> {% endcomment %}
+                        <th scope="col" class="text-start text-nowrap">K</th>
+                        <th scope="col" class="text-start text-nowrap">N</th>
+                        {% comment %} <th scope="col" class="text-start text-nowrap">Organic matter</th> {% endcomment %}
+                        <th scope="col" class="text-center text-nowrap">Tested at</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for report in reports %}
+                    <tr>
+                        <td class="text-start text-uppercase">{{report.argonomist.first_name}} {{report.argonomist.last_name}}</td>
+                        <td class='text-uppercase'>
+                            <span title="{{farm.id}}" style="cursor: pointer;" class="text-uppercase">{{report.farm.farm_metadata.owner.full_name}}</span>
+                        </td>
+                        <td class="text-start text-uppercase">{{report.farm.farm_metadata.owner.region}}, {{report.farm.farm_metadata.owner.district}}</td>
+                        <td>{{report.test_results.soil_color}}</td>
+                        <td>{{report.test_results.soil_temperature}}</td>
+                        <td>{{report.test_results.soil_structure}}</td>
+                        <td>{{report.test_results.soil_texture}}</td>
+                        <td>{{report.test_results.soil_porosity}}</td>
+                        <td>{{report.test_results.soil_ph}}</td>
+                        {% comment %} <td>{{report.test_results.soil_form}}</td> {% endcomment %}
+                        {% comment %} <td>{{report.test_results.bulk_density}}</td> {% endcomment %}
+                        {% comment %} <td>{{report.test_results.soil_moisture}}</td> {% endcomment %}
+                        {% comment %} <td>{{report.test_results.phosphorus_level}}</td> {% endcomment %}
+                        <td>{{report.test_results.potassium_level}}</td>
+                        <td>{{report.test_results.nitrogen_level}}</td>
+                        {% comment %} <td>{{report.test_results.organic_matter}}</td> {% endcomment %}
+                        <td>{{report.added_on | formatdatetime}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No farms found here</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% block myscript %}
+    {% comment %} <script src={% static 'administrator/js/report/seed.js' %}>
+    </script> {% endcomment %}
+{% endblock myscript %}
+
+{% endblock content %}
+

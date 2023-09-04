@@ -1,0 +1,153 @@
+{% extends 'mkulima/base.html' %}
+{% load static %}
+{% load filters %}
+
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href="" class="dropdown-item active">Gatherman</a>
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms & Production</a>
+        </div>
+    </div> {% endcomment %}
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Crops</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+        </div>
+    </div>
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item">Edit Profile</a>
+            <a href="" class="dropdown-item">Change Password</a>
+            <a href="" class="dropdown-item">Logs & Actions</a>
+        </div>
+    </div> {% endcomment %}
+{% endblock items %}
+
+
+{% block content %}
+
+<div class="container-fluid pt-4 px-4">
+    {% comment %} <div class="d-flex justify-content-end" style="font-weight: bold">
+        <a href={% url 'usergatherman' %} style="cursor: pointer;" {% if month == 'all' %} class="text-success" {% else %} class="text-muted" {% endif %}>All</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=1" style="cursor: pointer;" {% if month == '1' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Jan</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=2" style="cursor: pointer;" {% if month == '2' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Feb</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=3" style="cursor: pointer;" {% if month == '3' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Mar</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=4" style="cursor: pointer;" {% if month == '4' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Apr</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=5" style="cursor: pointer;" {% if month == '5' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>May</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=6" style="cursor: pointer;" {% if month == '6' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Jun</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=7" style="cursor: pointer;" {% if month == '7' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Jul</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=8" style="cursor: pointer;" {% if month == '8' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Ago</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=9" style="cursor: pointer;" {% if month == '9' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Sep</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=10" style="cursor: pointer;" {% if month == '10' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Oct</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=11" style="cursor: pointer;" {% if month == '11' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Nov</a>
+        <a href="{% url 'filtergatherbymonth' %}?month=12" style="cursor: pointer;" {% if month == '12' %} class="text-success mx-3" {% else %} class="text-muted mx-3" {% endif %}>Dec</a>
+    </div> {% endcomment %}
+    {% comment %} <hr /> {% endcomment %}
+    {% comment %} <div class="row"> {% endcomment %}
+    <div class="" style="margin-bottom: 15px">
+        <div style="background: #fff;" class="rounded h-100 p-4">
+            <div class="d-flex" style="justify-content: space-between">
+                <h6 style="color: #6c7293;" class="mb-4 fst-italici" style="font-weight: bold">{% if year %} GATHERMEN ({{year}}) {% else %} GATHERMEN {% endif %}</h6>
+                <form method="POST" id="deletegatherman">
+                    {% csrf_token %}
+                    <input type="hidden" name="profileids" id="idsinput" />
+                    <a href="" id="submitlink" class="d-none text-success fst-italici">Delete selected</a>
+                </form>
+            </div>
+            {% if idadi > 0 %}
+            <table class="table" id="tableView">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col" class="text-start">Location</th>
+                        <th scope="col" class="text-center">Phone</th>
+                        <th scope="col" class="text-center">Status</th>
+                        <th scope="col" class="text-center"># Records added</th>
+                        <th scope="col" class="text-center">Registered at</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for gatherman in gathermen %}
+                    <tr>
+                        <td class='text-uppercase text-success' style="font-weight: bold; display:flex; align-items: center">
+                            {% comment %} <input class="form-check-input" type="checkbox"> {% endcomment %}
+                            <span title="" title="{{gatherman.user.id}}" style="cursor: pointer;" class=""><a href={% url 'viewgatherprofile' gid=gatherman.id %} class="text-success" href="">{{gatherman.first_name}} {{gatherman.last_name}}</a></span>
+
+                            {% comment %} <span title="{{gatherman.user.id}}" style="cursor: pointer; " class="mx-2">{{gatherman.first_name}} {{gatherman.last_name}}</span> {% endcomment %}
+                        </td>
+                        <td class="text-start text-uppercase">{{gatherman.region}}, {{gatherman.district}}</td>
+                        <td class="text-center text-uppercase">{{gatherman.phone}}</td>
+                        <td class="text-center">{% if gatherman.user.is_active %} <span class="text-success">Active</span> {% else %} <span class="text-danger">Inactive</span> {% endif %} </td>
+                        <td class="text-center">{{gatherman.gathered_by.all.count}}</td>
+                        <td class="text-center text-uppercase">{{gatherman.user.joined | formatdatetime}}</td>
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No gatherman found here</p>
+            {% endif %}
+        </div>
+    </div>
+        {% comment %} <div class="col-3" style="margin-bottom: 20px">
+            <div class="bg-secondary rounded p-4">
+                <h6 class="mb-4 fst-italici" style="font-weight: bold">FILTER</h6>
+                <div>
+                    <div>
+                        <p style="margin-bottom: 0; padding-bottom: 0; font-weight: bold">By Active</p>
+                        <a style="display: block" href="{% url 'gatherstatus' %}?status=all" {% if status == "all" %} class="text-success" {% else %} class="text-muted" {% endif %}>All</a>
+                        <a style="display: block" href="{% url 'gatherstatus' %}?status=alive" {% if status == "alive" %} class="text-success" {% else %} class="text-muted" {% endif %}>Yes</a>
+                        <a style="display: block" href="{% url 'gatherstatus' %}?status=inactive" {% if status == "inactive" %} class="text-success" {% else %} class="text-muted" {% endif %}>No</a>
+                    </div>
+                    <div class="my-3">
+                        <form method="GET" id="yearform" action="{% url 'gatherbyyear' %}">
+                            {% csrf_token %}
+                            <labek for="yearFilter" style="font-weight: bold">By Year</label>
+                                <input name="year" type="number" class="form-control" style="margin-top: 3px" id="yearFilter"
+                                aria-describedby="">                        
+                            <small id="yearfilterlink" class="fst-italici text-success" style="display: block; margin-left: 80%; font-weight: bold">apply</small>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    {% comment %} </div> {% endcomment %}
+</div>
+
+{% comment %} <script src={% static 'administrator/js/delete_gathers.js' %}> {% endcomment %}
+    
+</script>
+{% endblock content %}
+

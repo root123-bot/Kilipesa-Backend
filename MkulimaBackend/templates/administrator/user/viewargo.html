@@ -1,0 +1,165 @@
+
+{% extends 'mkulima/base.html' %}
+{% load static %}
+
+{% block searchform %}
+
+{% endblock searchform %}
+
+
+{% block optionbutton %}
+    <button form="formtosubmit" id="submitbtn" type="submit" class="btn btn-success btn-md rounded-pill m-2">
+        Save Profile
+    </button>
+{% endblock optionbutton %}
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item active">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'farms' %} class="dropdown-item">Farms</a>
+        </div>
+    </div> {% endcomment %}
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">Farms & Production</a>
+        </div>
+    </div> {% endcomment %}
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+            <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+        </div>
+    </div>
+    {% comment %} <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href="" class="dropdown-item">Edit Profile</a>
+            <a href="" class="dropdown-item">Change Password</a>
+            <a href="" class="dropdown-item">Logs & Actions</a>
+        </div>
+    </div> {% endcomment %}
+{% endblock items %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="col-12" style="margin-bottom: 15px">
+        <div style="background: #fff" class="rounded h-100 p-4">
+            <form id="formtosubmit" onkeydown="return event.key != 'Enter';" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="display:flex; justify-content: space-between; algin-items: center">
+                    <h6 class="mb-4 fst-italici text-uppercase" style="font-weight: bold; color: #6c7293;">ARGONOMIST DETAILS</h6>
+
+                    <div style="display: flex; justify-content: center;">
+                        <input id="isactive" {% if argonomic.user.is_active %} checked {% endif %} name="isactive" class="form-check-input" type="checkbox">
+                        <label  for="isactive" class="fst-italici mx-2" style="font-weight: bold; cursor: pointer;">active</label>
+
+                        {% comment %} <a class="mx-4" href={% url 'admindelargo' pid=argonomic.id %}><i class="fa fa-trash m3-2"></i></a> {% endcomment %}
+                    </div>
+                </div>
+                <div>
+                    <div id="frontEndMsg" style="font-weight: bold; color: red; margin-top: 10px; display: none;">
+                        <p id='frontEndMessage'>Hello world</p>
+                    </div>
+                    <div class='row'>
+                        <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <input style="background: #95D5B2; border: 1px solid #6c7293" value="{{argonomic.first_name}}" type="text" class="form-control text-uppercase" id="fname" name="fname"
+                                placeholder="">
+                            <label for="fname">First name</label>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <input style="background: #95D5B2; border: 1px solid #6c7293" id="lname" value="{{argonomic.last_name}}" type="text" class="form-control text-uppercase" id="floatingPassword" name="lname"
+                                placeholder="text">
+                            <label for="floatingPassword">Last name</label>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <input style="background: #95D5B2; border: 1px solid #6c7293" id="phone" value="{{argonomic.phone}}" type="text" class="form-control" id="floatingPassword" name="phone"
+                                placeholder="text">
+                            <label for="floatingPassword">Phone number</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <select style="background: #95D5B2; border: 1px solid #6c7293" class="form-select" id="floatingSelect" name="country"
+                                aria-label="Floating label select example">
+                                <option selected value="TANZANIA">TANZANIA</option>
+                            </select>
+                            <label for="floatingSelect">Country</label>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <input type="hidden" id="submittedregion" value="{{argonomic.region}}" />
+                            <select style="background: #95D5B2; border: 1px solid #6c7293" class="form-select" id="region" name="region"
+                                aria-label="Floating label select example">
+                            </select>
+                            <label for="region">Region</label>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <input type="hidden" id="submitteddistrict" value="{{argonomic.district}}" />
+                            <select style="background: #95D5B2; border: 1px solid #6c7293" class="form-select" id="district" name="district"
+                                aria-label="Floating label select example">
+                            </select>
+                            <label for="district">District</label>
+                        </div>
+                        <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <input value="{{argonomic.ward}}" style="background: #95D5B2; border: 1px solid #6c7293" value="{{gather.ward}}" type="text" class="form-control" id="ward" name="ward"
+                                placeholder="text">
+                            <label for="ward">Ward</label>
+                        </div>
+                        
+                        {% comment %} <div class="form-floating mb-3 col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <select class="form-select" id="floatingSelect" name="ward"
+                                aria-label="Floating label select example">
+                                <option {% if argonomic.ward == 'Vingunguti' %} selected {% endif %} value="Vingunguti">VINGUNGUTI</option>
+                                <option {% if argonomic.ward == 'Buguruni' %} selected {% endif %} value="Buguruni">BUGURUNI</option>
+                                <option {% if argonomic.ward == 'Matumbi' %} selected {% endif %} value="Matumbi">MATUMBI</option>
+                            </select>
+                            <label for="floatingSelect">Ward</label>
+                        </div> {% endcomment %}
+                        <div class="col-12 col-sm-6 col-md-5 col-lg-4 col-xl-4">
+                            <label for="formFileLg" class="form-label">Upload profile picture</label>
+                            <input accept="image/*" style="display: none" class="form-control bg-dark" name="profilepicture" type="file" id="profilepicture">
+                            <label title={{argonomic.profile_picture.url}} id="photolabel" for="profilepicture" style="width: 150px; height: 100px; border: 1px dotted rgb(179, 177, 177); background-color: rgb(231, 231,231); cursor: pointer;" class="d-flex justify-content-center align-items-center">
+                                <img id="loadedimg" src={{argonomic.profile_picture.url}} style="width: 100%; height: 100%" />
+                            </label>
+                        </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src={% static 'mkulima/js/validation2.js' %}></script>
+<script src={% static 'mkulima/js/status_check.js' %}></script>
+<script src={% static 'mkulima/js/regionsdistricts.js' %}></script>
+<script src={% static 'mkulima/js/previewimage.js' %}></script>
+{% endblock content %}
+

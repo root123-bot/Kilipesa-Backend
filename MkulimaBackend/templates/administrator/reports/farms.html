@@ -1,0 +1,153 @@
+{% extends 'mkulima/base.html' %}
+{% load static %}
+{% load filters %}
+
+{% block customscripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.3/jspdf.plugin.autotable.min.js"></script>
+{% endblock customscripts %}
+
+{% block usergroup %}
+    admin
+{% endblock %}
+
+{% block submitbtn %}
+{% comment %} <button id="savereportbtn" class="btn btn-success">Download report</button> {% endcomment %}
+
+{% endblock submitbtn %}
+
+{% block items %}
+    <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+            <a href={% url 'usergatherman' %} class="dropdown-item">Gatherman</a>
+        </div>
+    </div>
+    <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Tests & Recom..</a>
+    <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+    <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+
+
+    <div class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+        <div class="dropdown-menu bg-transparent border-0">
+            <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+            <a href={% url 'farmsreport' %} class="dropdown-item active">Farms</a>
+            {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+            <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+            <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+            <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+            <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+            <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+            <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+        </div>
+    </div>
+
+{% endblock items %}
+
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="col-12" style="margin-bottom: 15px">
+        <div style="background: #fff" class="rounded h-100 p-4">
+            <div style="display:flex; justify-content: space-between; algin-items: center">
+                <div>
+                    <h6 style="color: #6c7293;" class="mb-1 fst-italici text-uppercase" style="font-weight: bold">FARMS REPORT</h6>
+                </div>
+            </div>
+        </div>
+        <div style="background: #fff" class="mt-3 rounded h-100 p-4">
+            {% if idadi > 0 %}
+            <table class="table" id="tableView">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-start">Owner</th>
+                        <th scope="col" class="text-center">Location</th>
+                        <th scope="col" class="text-center">Is Assessed</th>
+                        <th scope="col" class="text-center">Size (m<sup>2</sup> / ha)</th>
+                        <th scope="col" class="text-center">Registered at</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for farm in farms %}
+                    <tr>
+                        <td class='text-uppercase' style="display:flex; align-items: center">
+                            {{farm.farm_metadata.owner.full_name}}
+                        </td>
+                        <td class="text-center text-uppercase">{{farm.region}}, {{farm.district}}</td>
+                        <td class="text-center"> 
+                        {% if farm.report.count > 0 %} True {% else %} False {% endif %}
+                        {% comment %} <td class="text-center">{{farm.farm_metadata.programmed_farmsize | computeonlyhectras}}</td> {% endcomment %}
+                        <td class="text-center">
+                            <small>{{farm.farm_metadata.programmed_farmsize | roundmetersquare }}</small> /
+                            <small> {% with sizeinhectras=farm.farm_metadata.programmed_farmsize|computeonlyhectras %} {{sizeinhectras}} {% endwith %}</small>
+                        </td>
+                        <td class="text-center">{{farm.farm_metadata.added_on | formatdatetime}}</td>
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No farms found here</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    {% comment %} the the pie chart div start here {% endcomment %}
+    
+    {% comment %} pie chart pie chart div end here {% endcomment %}
+
+</div>
+{% endblock content %}
+<div class="container-fluid pt-4 px-4">
+    <div class="col-12" style="margin-bottom: 15px">
+        <div class="bg-secondary rounded h-100 p-4">
+            <div class="d-flex" style="justify-content: space-between">
+                <h6 class="mb-4 fst-italici" style="font-weight: bold">FARMS</h6>
+                <form method="POST" id="deletegatherman">
+                    {% csrf_token %}
+                    <input type="hidden" name="profileids" id="idsinput" />
+                    <a href="" id="submitlink" class="text-success fst-italici">Delete selected</a>
+                </form>
+            </div>
+            {% if idadi > 0 %}
+            <table class="table" id="tableView">
+                <thead>
+                    <tr>
+                        <th scope="col" class="text-start">Owner</th>
+                        <th scope="col" class="text-center">Location</th>
+                        <th scope="col" class="text-center">Is Recommended</th>
+                        <th scope="col" class="text-center">Size(hectras)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for farm in farms %}
+                    <tr>
+                        <td class='text-uppercase' style="display:flex; align-items: center">
+                            {{farm.farm_metadata.owner.full_name}}
+                        </td>
+                        <td class="text-center text-uppercase">{{farm.region}}, {{farm.district}}</td>
+                        <td class="text-center"> 
+                        {% if farm.report.count > 0 %} <img src={% static 'administrator/images/check-mark.png' %} width='20px' /> {% else %} <img src={% static 'administrator/images/cancel.png' %} width='20px' /> {% endif %}
+                        <td class="text-center">{{farm.size}}</td>
+                        
+                    </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No farms found here</p>
+            {% endif %}
+        </div>
+    </div>
+    </div>
+</div>
+{% block myscript %}
+    
+    {% comment %} <script src= {% static 'administrator/js/report.js' %}></script> {% endcomment %}
+{% endblock myscript %}

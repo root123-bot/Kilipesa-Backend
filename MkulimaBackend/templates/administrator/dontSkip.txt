@@ -1,0 +1,1 @@
+Don't name any template file Admin or any app Admin because there is one which is built in Django with the same name of Admin

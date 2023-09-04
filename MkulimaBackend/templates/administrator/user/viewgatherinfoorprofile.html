@@ -1,0 +1,165 @@
+{% extends 'mkulima/base.html' %}
+{% load static %}
+{% block optionbutton %}
+{% comment %} <button form="formtosubmit" id="submitbtn" type="submit" class="btn btn-success btn-md rounded-pill m-2">Save Profile</button> {% endcomment %}
+
+{% endblock optionbutton %}
+
+{% block notification %}
+    {% if usergroup == "admin" %}
+        <div class="nav-item" id="notificationCont">
+            <input type="hidden" value="{{idadinotification}}" id="idadiyanotification" />
+            <a href={% url 'notificationcenter' %} class="nav-link" id="notification">
+                <i class="fa fa-bell noti me-lg-2"></i>
+            </a>
+        </div>
+    {% endif %}
+{% endblock notification %}
+
+{% block usergroup %}
+{% if usergroup == 'admin' %}
+    admin
+{% else %}
+    Gatherman
+{% endif %}
+{% endblock %}
+
+{% block items %}
+    {% if usergroup == "admin" %}
+        <a href={% url 'administrator' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown"><i class="fa fa-users me-2"></i>Users</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href={% url 'userargonomist' %} class="dropdown-item">Argonomist</a>
+                <a href={% url 'usergatherman' %} class="dropdown-item active">Gatherman</a>
+            </div>
+        </div>
+        <a href={% url 'testandrecomms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-vial me-2"></i>Test and Recom..</a>
+        <a href={% url 'farms' %} class="nav-item nav-link text-nowrap"><i class="fa fa-tree me-2"></i>Farms</a>
+        <a href={% url 'farmersreport' %} class="nav-item nav-link text-nowrap"><i class="fa fa-id-card me-2"></i>Farmers</a>
+        
+        {% comment %} <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-book me-2"></i>Informations</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href={% url 'farms' %} class="dropdown-item">Farms</a>
+            </div>
+        </div> {% endcomment %}
+    
+        {% comment %} <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href={% url 'cropsreport' %} class="dropdown-item">Crops & Production</a>
+            </div>
+        </div> {% endcomment %}
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-bookmark me-2"></i>Reports</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href={% url 'cropsreport' %} class="dropdown-item">General</a>
+                <a href={% url 'farmsreport' %} class="dropdown-item">Farms</a>
+                {% comment %} <a href={% url 'farmersreport' %} class="dropdown-item">Farmers</a> {% endcomment %}
+                <a href={% url 'recommendedcrops' %} class="dropdown-item">Crops</a>
+                <a href={% url 'fertlizerreport' %} class="dropdown-item">Fertilizers</a>
+                <a href={% url 'yieldreport' %} class="dropdown-item">Yield and Productions</a>
+                <a href={% url 'seedamount' %} class="dropdown-item">Seeds</a>
+                <a href={% url 'cultivation' %} class="dropdown-item">Cultivation</a>
+                <a href={% url 'soilreport' %} class="dropdown-item">Soil</a>
+            </div>
+        </div>
+    
+        {% comment %} <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i class="fa fa-th me-2"></i>Other</a>
+            <div class="dropdown-menu bg-transparent border-0">
+                <a href="" class="dropdown-item">Edit Profile</a>
+                <a href="" class="dropdown-item">Change Password</a>
+                <a href="" class="dropdown-item">Logs & Actions</a>
+            </div>
+        </div> {% endcomment %}
+    
+    {% else %}
+        <a href={% url 'gather_full_profile' %} class="nav-item nav-link"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+        <a href={%url 'gather_add_record' %} class="text-nowrap nav-item nav-link"><i class="fa fa-book me-2"></i>Records</a>
+        <a href="" class="nav-item nav-link active"><i class="fa fa-edit me-2"></i>Edit Profile</a>
+        <a href={% url 'gatherman_changepassword' %} class="text-nowrap nav-item nav-link"><i class="fa fa-lock me-2"></i>Change Password</a>
+    {% endif %}
+{% endblock items %}
+
+{% block content %}
+<div class="container-fluid pt-4 px-4">
+    <div style="background: #fff" class="rounded py-2">
+        <div class="">
+            <div class="col-12 p-5" style="font-size: 110%">
+                <div style="display: flex; justify-content: space-between; ">
+                    <div style="display: flex; align-items: center;">
+                        <img style="border-radius: 50%; border: 2px solid grey;" src={{profilephoto}} height="200px" width="200px" />
+                        <div class="mx-4">
+                            <div style="font-weight: bold;" class="mb-2">
+                                <span >Name:</span>
+                                <span class="text-uppercase">{{gatherman.first_name}} {{gatherman.last_name}}</span>  
+                            </div>
+                            <div style="font-weight: bold;" class="mb-2">
+                                <span>Phone:</span>
+                                <span>{{gatherman.phone}}</span>
+                            </div>
+                            <div style="font-weight: bold;" class="mb-2">
+                                <span>Email:</span>
+                                <span>{{gatherman.user.email}}</span>
+                            </div>
+                            <div style="font-weight: bold;" class="mb-2">
+                                <span>Location:</span>
+                                <span>{{gatherman.region}}, {{gatherman.district}}</span>
+                            </div>
+                            <div style="font-weight: bold;" class="mb-2">
+                                <span>Records:</span>
+                                <span>{{infos}}</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="">
+                        {% if usergroup == 'admin' %}
+                            {% if gatherman.user.is_active %}
+                                <a href={% url 'disableuser' uid=gatherman.user.id type="Gatherman" %}><button class="btn btn-danger btn-md rounded-pill m-2">Block</button></a>
+                            {% else %}
+                                <a href={% url 'enableuser' uid=gatherman.user.id type="Gatherman" %}><button class="btn btn-danger btn-md rounded-pill m-2">Enable</button></a>
+                            {% endif %}
+
+                            <a href={% url 'indigather' gid=gatherman.id  %}><button class="btn btn-success btn-md rounded-pill m-2">Edit Profile</button></a>
+                        {% else %}
+                            <a href={% url 'gather_edit_profile' %}><button class="btn btn-success btn-md rounded-pill m-2">Edit Profile</button></a>
+                        {% endif %}
+
+                        {% if usergroup == "admin" %}
+                        {% comment %} <a href={% url 'admindelgather' pid=gatherman.id %}><button class="btn btn-danger btn-md rounded-pill m-2">Delete</button></a> {% endcomment %}
+                        {% endif %}
+                    </div>
+                </div>
+                <hr />
+                <div style="display: flex; align-items: center">
+                    <div class="">
+                        <p class="text-uppercase" style="text-decoration: underlinee; margin-bottom: 0; padding-bottom:0; font-weight: bold">Education Level</p>
+                        <small style="margin-top: 10px;">{{gatherman.education_level}}</small>
+                    </div>
+                    <div style="margin-left: 100px">
+                        <p class="text-uppercase" style="text-decoration: underlinee; margin-bottom: 0; padding-bottom: 0; font-weight: bold;">Attachments</p>
+                        <a href={{gatherman.attachment.url}} target="_blank"><small style="margin-top: 10px; color: #0275d8; text-decoration: underline">{{gatherman.attachment.name}}</small></a>
+                    </div>
+                    {% if usergroup == "admin" %}
+                        <div style="margin-left: 100px">
+                            <p class="text-uppercase" style="text-decoration: underlinee; margin-bottom: 0; padding-bottom: 0; font-weight: bold;">User Status</p>
+                            <small>{% if gatherman.user.is_active %} Active {% else %} Inactive {% endif %}</small>
+
+                            {% comment %} <span style="margin-top: 10px">False</span> {% endcomment %}
+                            {% comment %} {% if gatherman.user.is_active %}
+                                <img class="mx-3" src={% static 'administrator/images/check-mark.png' %} width='20px' />
+                                {% else %}
+                                <img class="mx-3" src={% static 'administrator/images/cancel.png' %} width='20px' />
+                            {% endif %} {% endcomment %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
